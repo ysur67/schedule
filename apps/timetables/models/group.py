@@ -5,6 +5,8 @@ from apps.main.models import BaseModel
 class EducationalLevel(BaseModel):
     """Модель для описания уровня образования."""
 
+    code = models.CharField(verbose_name="Код", max_length=300, default="")
+
     class Meta:
         verbose_name = "Уровень образования"
         verbose_name_plural = "Уровни образования"
