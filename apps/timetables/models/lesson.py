@@ -24,3 +24,7 @@ class Lesson(BaseModel):
         null=True, blank=True,
         verbose_name="Аудитория"
     )
+
+    class Meta:
+        verbose_name = "Занятие"
+        verbose_name_plural = "Занятия"
