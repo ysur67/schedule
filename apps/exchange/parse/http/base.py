@@ -1,5 +1,5 @@
 from typing import Dict, Type, TypeVar
-from .base import BaseParser
+from ..base import BaseParser
 import requests
 from bs4 import BeautifulSoup
 
@@ -21,10 +21,3 @@ class BaseHttpParser(BaseParser):
     def on_set_up(self):
         request = requests.post(self.url, data=self.payload_data)
         self.soup = BeautifulSoup(request.text, "html.parser")
-
-
-class MainSiteParser(BaseHttpParser):
-    logging_name: str = "Main Site Parser"
-
-    def parse(self):
-        pass
