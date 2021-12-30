@@ -55,6 +55,7 @@ class MainSiteParser(BaseHttpParser):
         tds = row.find_all("td")
         # Удаляем первый элемент - это номер строки
         tds.pop(0)
+        # TODO: Вот с этим уродском, если возможно - что-то придумать
         for index, cell in enumerate(tds):
             if index == 0:
                 group = self.parse_group(cell)
@@ -80,6 +81,7 @@ class MainSiteParser(BaseHttpParser):
             return lesson
         return create_lesson(
             title=subject.title,
+            # TODO: Парсинг даты текущего занятия
             date=datetime.now().date(),
             time_start=time_start,
             time_end=time_end,
