@@ -1,6 +1,6 @@
 from django.db import models
 from apps.main.models import BaseModel
-from apps.timetables.models import Group, Teacher, Classroom
+from apps.timetables.models import Group, Teacher, Classroom, Subject
 
 
 class Lesson(BaseModel):
@@ -23,6 +23,10 @@ class Lesson(BaseModel):
         Classroom, on_delete=models.SET_NULL, related_name="lessons",
         null=True, blank=True,
         verbose_name="Аудитория"
+    )
+    subject = models.ForeignKey(
+        Subject, on_delete=models.SET_NULL, related_name="lessons",
+        null=True, verbose_name="Дисциплина"
     )
 
     class Meta:
