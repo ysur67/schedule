@@ -24,4 +24,4 @@ class ClassroomAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("id", "title", "date", "time_start", "time_end")
