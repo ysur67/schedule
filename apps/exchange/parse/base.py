@@ -1,8 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from pathlib import Path
-from typing import Type, TypeVar, Union
+from typing import Type, TypeVar
 from django.conf import settings
 
 
@@ -12,12 +11,12 @@ T = TypeVar("T", bound="BaseParser")
 class BaseParser(ABC):
     url: str
     media_path: str
-    loggin_filename: str
+    logging_name: str
 
     @classmethod
-    def build_parser(cls: Type[T], file_path: Union[str, Path]) -> T:
+    def build_parser(cls: Type[T], url: str) -> T:
         """Фабричный метод парсеров."""
-        parser = cls(file_path)
+        parser = cls(url)
         parser.set_up()
         return parser
 
@@ -43,12 +42,12 @@ class BaseParser(ABC):
 
     def _set_up_logger(self):
         self.logger = logging.getLogger(__name__)
-        file_name = settings.LOGGING_DIR / self._get_logger_filename()
+        file_name = settings.LOGGING_DIR / self._build_logging_filename()
         file_handler = logging.FileHandler(str(file_name))
         self.logger.addHandler(file_handler)
         file_handler.setFormatter(logging.Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
         self.logger.setLevel(logging.DEBUG)
 
-    def _get_logger_filename(self):
+    def _build_logging_filename(self):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        return f"{self._logger_filename} {current_time}.log"
+        return f"{self.logging_name} {current_time}.log"
