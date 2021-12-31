@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
-from apps.exchange.parse.utils import get_time_range_from_string
+from apps.exchange.parse.utils import get_date_from_string, get_time_range_from_string
 from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
@@ -26,32 +26,37 @@ class MainSiteParser(BaseHttpParser):
         self.logger.info("Поля запроса: %s", self.payload_data)
 
     def parse(self):
-        tables = self.soup.find_all("table")
-        if not tables:
-            self.logger.error("Не было найдено таблиц занятий, отмена операции")
-            self.logger.info("Ответ от сервера: %s", self.soup.prettify())
-            return
-        for table in tables:
-            self.parse_table(table)
+        date_titles = self.soup.find_all("h4")
+        for title in date_titles:
+            title: BeautifulSoup
+            parent_center = title.parent
+            current_date = get_date_from_string(title.get_text())
+            table = parent_center.next_sibling
+            if table.name != "table":
+                self.logger.error("Не была найдена таблица")
+                continue
+            self.parse_table(table, current_date)
 
-    def parse_table(self, table: BeautifulSoup) -> None:
+    def parse_table(self, table: BeautifulSoup, current_date: date) -> None:
         rows = table.find_all("tr")
         if not rows:
             return self.logger.error("Таблица не содержит строк!")
         # Удаляем первую строку из таблицы - это хедер
         rows.pop(0)
-        _ = self.get_lesssons_from_rows(rows)
+        _ = self.get_lesssons_from_rows(rows, current_date)
 
-    def get_lesssons_from_rows(self, rows: BeautifulSoup) -> List[Lesson]:
+    def get_lesssons_from_rows(self, rows: BeautifulSoup, current_date: date) -> List[Lesson]:
         result = []
         for row in rows:
-            lesson = self.get_lesson_from_single_row(row)
+            lesson = self.get_lesson_from_single_row(row, current_date)
             if lesson:
                 result.append(lesson)
         return result
 
-    def get_lesson_from_single_row(self, row: BeautifulSoup) -> Optional[Lesson]:
+    def get_lesson_from_single_row(self, row: BeautifulSoup, current_date: date) -> Optional[Lesson]:
         tds = row.find_all("td")
+        if not tds:
+            return self.logger.error("Строка не содержит значений, пропуск...")
         # Удаляем первый элемент - это номер строки
         tds.pop(0)
         # TODO: Вот с этим уродском, если возможно - что-то придумать
@@ -72,7 +77,7 @@ class MainSiteParser(BaseHttpParser):
             group=group,
             time_start=time_start,
             classroom=classroom,
-            lesson_date=datetime.now().date(),
+            lesson_date=current_date,
             subject=subject,
             teacher=teacher,
         ))
@@ -80,8 +85,7 @@ class MainSiteParser(BaseHttpParser):
             return lesson
         return create_lesson(
             title=subject.title,
-            # TODO: Парсинг даты текущего занятия
-            date=datetime.now().date(),
+            date=current_date,
             time_start=time_start,
             time_end=time_end,
             group=group,

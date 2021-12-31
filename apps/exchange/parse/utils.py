@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import date, datetime, time
 from typing import Tuple
 
 
@@ -36,7 +36,7 @@ def get_hours_and_minutes(string: str) -> Tuple[int, int]:
         string (str): Строка
 
     Raises:
-        TypeError: Если строка имела неправильный формат.
+        TypeError: Если строка имеет неправильный формат.
 
     Returns:
         int, int: Часы, минуты.
@@ -47,3 +47,24 @@ def get_hours_and_minutes(string: str) -> Tuple[int, int]:
     hour = int(initial[0])
     minute = int(initial[1])
     return hour, minute
+
+
+def get_date_from_string(string: str) -> date:
+    """Получить дату из строки.
+
+    Обязательный формат строки `dd.mm.YY DayOfWeek`
+
+    Args:
+        string (str): Строка
+
+    Raises:
+        TypeError: Если строка имеет неправильный формат
+
+    Returns:
+        date: Дата
+    """
+    initial = string.split(" ")
+    if not initial or len(initial) < 2:
+        raise TypeError("date format is invalid")
+    DATE_FORMAT = "%d.%m.%Y"
+    return datetime.strptime(initial[0], DATE_FORMAT).date()
