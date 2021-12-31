@@ -109,3 +109,7 @@ media/
 *.pid
 
 logs
+
+docker-compose.*.yml
+docker-compose.yml
+!docker-compose.example.yml
