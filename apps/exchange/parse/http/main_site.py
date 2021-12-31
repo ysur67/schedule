@@ -48,12 +48,12 @@ class MainSiteParser(BaseHttpParser):
     def get_lesssons_from_rows(self, rows: BeautifulSoup, current_date: date) -> List[Lesson]:
         result = []
         for row in rows:
-            lesson = self.get_lesson_from_single_row(row, current_date)
+            lesson = self.get_lessons_from_single_row(row, current_date)
             if lesson:
                 result.append(lesson)
         return result
 
-    def get_lesson_from_single_row(self, row: BeautifulSoup, current_date: date) -> Optional[Lesson]:
+    def get_lessons_from_single_row(self, row: BeautifulSoup, current_date: date) -> List[Lesson]:
         tds = row.find_all("td")
         if not tds:
             return self.logger.error("Строка не содержит значений, пропуск...")
