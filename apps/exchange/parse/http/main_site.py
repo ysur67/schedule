@@ -62,7 +62,7 @@ class MainSiteParser(BaseHttpParser):
         # TODO: Вот с этим уродском, если возможно - что-то придумать
         for index, cell in enumerate(tds):
             if index == 0:
-                group = self.parse_group(cell)
+                groups = self.parse_groups(cell)
             elif index == 1:
                 time_start, time_end = get_time_range_from_string(cell.get_text())
             elif index == 2:
@@ -73,34 +73,42 @@ class MainSiteParser(BaseHttpParser):
                 teacher = self.parse_teacher(cell)
             elif index == 5:
                 note = self.parse_note(cell)
-        lesson = get_lesson_by_query_params(GetLessonParams(
-            group=group,
-            time_start=time_start,
-            classroom=classroom,
-            lesson_date=current_date,
-            subject=subject,
-            teacher=teacher,
-        ))
-        if lesson:
-            return lesson
-        return create_lesson(
-            title=subject.title,
-            date=current_date,
-            time_start=time_start,
-            time_end=time_end,
-            group=group,
-            teacher=teacher,
-            note=note,
-            subject=subject,
-            classroom=classroom
-        )
+        result = []
+        for group in groups:
+            lesson = get_lesson_by_query_params(GetLessonParams(
+                group=group,
+                time_start=time_start,
+                classroom=classroom,
+                lesson_date=current_date,
+                subject=subject,
+                teacher=teacher,
+            ))
+            if lesson:
+                result.append(lesson)
+                continue
+            result.append(create_lesson(
+                title=subject.title,
+                date=current_date,
+                time_start=time_start,
+                time_end=time_end,
+                group=group,
+                teacher=teacher,
+                note=note,
+                subject=subject,
+                classroom=classroom
+            ))
+        return result
 
-    def parse_group(self, group: BeautifulSoup) -> Group:
-        title = self._get_title(group)
-        result = get_group_by_title(title)
-        if result:
-            return result
-        return create_group(title=title)
+    def parse_groups(self, group: BeautifulSoup) -> List[Group]:
+        groups_titles = self._get_title(group)
+        result = []
+        for title in groups_titles.split(","):
+            group_obj = get_group_by_title(title)
+            if group_obj:
+                result.append(group_obj)
+                continue
+            result.append(create_group(title=title))
+        return result
 
     def parse_classroom(self, classroom: BeautifulSoup) -> Classroom:
         title = self._get_title(classroom)
