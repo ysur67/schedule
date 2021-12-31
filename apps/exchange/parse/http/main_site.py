@@ -92,6 +92,7 @@ class MainSiteParser(BaseHttpParser):
             teacher=teacher,
             note=note,
             subject=subject,
+            classroom=classroom
         )
 
     def parse_group(self, group: BeautifulSoup) -> Group:
