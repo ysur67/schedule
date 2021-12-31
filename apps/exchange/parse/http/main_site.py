@@ -1,5 +1,4 @@
 from datetime import datetime
-from os import lseek
 from typing import List, Optional
 from apps.exchange.parse.utils import get_time_range_from_string
 from apps.timetables.models.classroom import Classroom
