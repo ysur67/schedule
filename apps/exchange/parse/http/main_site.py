@@ -89,8 +89,11 @@ class MainSiteParser(BaseHttpParser):
         return result
 
     def parse_groups(self, group: BeautifulSoup) -> List[Group]:
-        groups_titles = self._get_title(group)
+        groups_titles = self.get_title(group)
         result = []
+        # Группы могут быть написаны следующим образом
+        # 112, 1-И
+        # Поэтому необходимо делить строку по запятой
         for title in groups_titles.split(","):
             group_obj = get_group_by_title(title)
             if group_obj:
@@ -100,28 +103,28 @@ class MainSiteParser(BaseHttpParser):
         return result
 
     def parse_classroom(self, classroom: BeautifulSoup) -> Classroom:
-        title = self._get_title(classroom)
+        title = self.get_title(classroom)
         result = get_classroom_by_name(title)
         if result:
             return result
         return create_classroom(title=title)
 
     def parse_subject(self, subject: BeautifulSoup) -> Subject:
-        title = self._get_title(subject)
+        title = self.get_title(subject)
         result = get_subject_by_title(title)
         if result:
             return result
         return create_subject(title=title)
 
     def parse_teacher(self, teacher: BeautifulSoup) -> Teacher:
-        title = self._get_title(teacher)
+        title = self.get_title(teacher)
         result = get_teacher_by_name(title)
         if result:
             return result
         return create_teacher(name=title)
 
     def parse_note(self, note: BeautifulSoup) -> Optional[str]:
-        return self._get_title(note, raise_exception=False)
+        return self.get_title(note, raise_exception=False)
 
     def parse_lesson(
         self,
@@ -143,8 +146,9 @@ class MainSiteParser(BaseHttpParser):
             teacher=teacher,
         ))
         if lesson:
+            self.log_lesson(lesson, "создано")
             return lesson
-        return create_lesson(
+        lesson = create_lesson(
             title=subject.title,
             date=current_date,
             time_start=time_start,
@@ -155,11 +159,40 @@ class MainSiteParser(BaseHttpParser):
             subject=subject,
             classroom=classroom
         )
+        self.log_lesson(lesson, "обновлено")
+        return lesson
 
-    def _get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
+    def get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
+        """Получить текст из блока BeautifulSoup
+
+        Args:
+            item (BeautifulSoup): Блок
+            raise_exception (bool, optional): Флаг, указывающий на то, что
+            необходимо поднимать исключение, если текста внутри блока нет.
+            Defaults to True.
+        """
         result = item.get_text()
         if result:
             return result
         if raise_exception:
             raise ValueError("bs item has no title inside it")
         return None
+
+    def log_lesson(self, lesson: Lesson, operation: str = "создано/обновлено") -> None:
+        msg = f"""
+        Было {operation} занятие
+        Группа: {lesson.group}
+        Время: {lesson.time_start} - {lesson.time_end}
+        Дисциплина: {lesson.subject}
+        Преподаватель: {lesson.teacher}
+        Примечание: {lesson.note}
+        """
+        self.logger.info(msg)
+
+    def log_group(self, group: Group, operation: str = "создана/обновлена") -> None:
+        msg = f"""
+        Была {operation} группа
+        Идентификатор: {group.id}
+        Наименование: {group.title}
+        """
+        self.logger.info(msg)

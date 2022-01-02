@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from django.db import models
 
 
@@ -20,7 +21,22 @@ class IsActiveMixin(models.Model):
         abstract = True
 
 
-class BaseModel(TitleMixin, IsActiveMixin):
+class LoggingMixin(models.Model):
 
     class Meta:
         abstract = True
+
+    @abstractmethod
+    def to_logging_message(self) -> str:
+        pass
+
+
+class BaseModel(TitleMixin, IsActiveMixin, LoggingMixin):
+
+    class Meta:
+        abstract = True
+
+    def to_logging_message(self) -> str:
+        msg = f"Объект: {self.Meta.verbose_name}\n" + \
+        f"Наименование: {self.title}\n"
+        return msg

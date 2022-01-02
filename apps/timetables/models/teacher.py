@@ -1,8 +1,8 @@
 from django.db import models
-from apps.main.models import IsActiveMixin
+from apps.main.models import IsActiveMixin, LoggingMixin
 
 
-class Teacher(IsActiveMixin):
+class Teacher(IsActiveMixin, LoggingMixin):
     name = models.CharField(verbose_name="ФИО", max_length=300)
 
     class Meta:
@@ -11,3 +11,8 @@ class Teacher(IsActiveMixin):
 
     def __str__(self) -> str:
         return self.name
+
+    def to_logging_message(self) -> str:
+        msg = f"Объект: {self.Meta.verbose_name}\n" + \
+            f"Имя: {self.name}"
+        return msg

@@ -11,6 +11,11 @@ class EducationalLevel(BaseModel):
         verbose_name = "Уровень образования"
         verbose_name_plural = "Уровни образования"
 
+    def to_logging_message(self) -> str:
+        msg = super().to_logging_message()
+        msg += f"Код: {self.code}"
+        return msg
+
 
 class Group(BaseModel):
     """Модель для описания группы студентов."""
@@ -24,3 +29,8 @@ class Group(BaseModel):
     class Meta:
         verbose_name = "Группа"
         verbose_name_plural = "Группы"
+
+    def to_logging_message(self) -> str:
+        msg = super().to_logging_message()
+        msg += f"Уровень образования: {self.level}"
+        return msg

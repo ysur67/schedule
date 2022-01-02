@@ -32,3 +32,13 @@ class Lesson(BaseModel):
     class Meta:
         verbose_name = "Занятие"
         verbose_name_plural = "Занятия"
+
+    def to_logging_message(self) -> str:
+        msg = super().to_logging_message()
+        msg += f"Дата: {self.date}\n" + \
+            f"Время: {self.time_start} - {self.time_end}\n" + \
+            f"Группа: {self.group}\n" + \
+            f"Преподаватель: {self.teacher}\n" + \
+            f"Аудитория: {self.classroom}\n" + \
+            f"Дисциплина: {self.subject}"
+        return msg
