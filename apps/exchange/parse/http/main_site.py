@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, time
 from typing import List, Optional
 from apps.exchange.parse.utils import get_date_from_string, get_time_range_from_string
 from apps.timetables.models.classroom import Classroom
@@ -75,28 +75,17 @@ class MainSiteParser(BaseHttpParser):
                 note = self.parse_note(cell)
         result = []
         for group in groups:
-            lesson = get_lesson_by_params(AllFieldsParam(
+            lesson = self.parse_lesson(
                 group=group,
-                time_start=time_start,
-                classroom=classroom,
-                lesson_date=current_date,
-                subject=subject,
-                teacher=teacher,
-            ))
-            if lesson:
-                result.append(lesson)
-                continue
-            result.append(create_lesson(
-                title=subject.title,
-                date=current_date,
+                current_date=current_date,
                 time_start=time_start,
                 time_end=time_end,
-                group=group,
-                teacher=teacher,
-                note=note,
+                classroom=classroom,
                 subject=subject,
-                classroom=classroom
-            ))
+                teacher=teacher,
+                note=note
+            )
+            result.append(lesson)
         return result
 
     def parse_groups(self, group: BeautifulSoup) -> List[Group]:
@@ -133,6 +122,39 @@ class MainSiteParser(BaseHttpParser):
 
     def parse_note(self, note: BeautifulSoup) -> Optional[str]:
         return self._get_title(note, raise_exception=False)
+
+    def parse_lesson(
+        self,
+        group: Group,
+        current_date: date,
+        time_start: time,
+        time_end: time,
+        classroom: Classroom,
+        subject: Subject,
+        teacher: Teacher,
+        note: str
+        ) -> Lesson:
+        lesson = get_lesson_by_params(AllFieldsParam(
+            group=group,
+            time_start=time_start,
+            classroom=classroom,
+            lesson_date=current_date,
+            subject=subject,
+            teacher=teacher,
+        ))
+        if lesson:
+            return lesson
+        return create_lesson(
+            title=subject.title,
+            date=current_date,
+            time_start=time_start,
+            time_end=time_end,
+            group=group,
+            teacher=teacher,
+            note=note,
+            subject=subject,
+            classroom=classroom
+        )
 
     def _get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
         result = item.get_text()
