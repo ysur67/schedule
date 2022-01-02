@@ -1,1 +1,1 @@
-from .mixins import TitleMixin, IsActiveMixin, BaseModel
+from .mixins import TitleMixin, IsActiveMixin, LoggingMixin, BaseModel
