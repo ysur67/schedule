@@ -175,22 +175,6 @@ class MainSiteParser(BaseHttpParser):
         self.log_operation(lesson, "создана")
         return lesson
 
-    def get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
-        """Получить текст из блока BeautifulSoup
-
-        Args:
-            item (BeautifulSoup): Блок
-            raise_exception (bool, optional): Флаг, указывающий на то, что
-            необходимо поднимать исключение, если текста внутри блока нет.
-            Defaults to True.
-        """
-        result = item.get_text()
-        if result:
-            return result
-        if raise_exception:
-            raise ValueError("bs item has no title inside it")
-        return None
-
     def log_operation(self, obj: LoggingMixin, operation: str = "создана/обновлена") -> None:
         msg = f"Была {operation} запись {obj._meta.verbose_name}\n"
         msg += obj.to_logging_message()

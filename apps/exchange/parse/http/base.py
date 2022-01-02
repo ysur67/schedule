@@ -1,4 +1,4 @@
-from typing import Dict, Type, TypeVar
+from typing import Dict, Optional, Type, TypeVar
 from ..base import BaseParser
 import requests
 from bs4 import BeautifulSoup
@@ -42,3 +42,19 @@ class BaseHttpParser(BaseParser):
         if not request.ok:
             raise ValueError("код ответа не находится в промежутке 200-299")
         self.soup = BeautifulSoup(request.text, "html.parser")
+
+    def get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
+        """Получить текст из блока BeautifulSoup
+
+        Args:
+            item (BeautifulSoup): Блок
+            raise_exception (bool, optional): Флаг, указывающий на то, что
+            необходимо поднимать исключение, если текста внутри блока нет.
+            Defaults to True.
+        """
+        result = item.get_text()
+        if result:
+            return result
+        if raise_exception:
+            raise ValueError("bs item has no title inside it")
+        return None
