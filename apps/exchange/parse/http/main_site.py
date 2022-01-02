@@ -1,6 +1,7 @@
-from datetime import date, datetime
+from datetime import date, datetime, time
 from typing import List, Optional
 from apps.exchange.parse.utils import get_date_from_string, get_time_range_from_string
+from apps.main.models.mixins import LoggingMixin
 from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
@@ -8,7 +9,7 @@ from apps.timetables.models.teacher import Teacher
 from apps.timetables.usecases.classroom import create_classroom, get_classroom_by_name
 
 from apps.timetables.usecases.group import create_group, get_group_by_title
-from apps.timetables.usecases.lesson import WholeLessonParam, create_lesson, get_lesson_by_params
+from apps.timetables.usecases.lesson import AllFieldsParam, create_lesson, get_lesson_by_params
 from apps.timetables.usecases.subject import create_subject, get_subject_by_title
 from apps.timetables.usecases.teacher import create_teacher, get_teacher_by_name
 from .base import BaseHttpParser
@@ -75,69 +76,106 @@ class MainSiteParser(BaseHttpParser):
                 note = self.parse_note(cell)
         result = []
         for group in groups:
-            lesson = get_lesson_by_params(WholeLessonParam(
+            lesson = self.parse_lesson(
                 group=group,
-                time_start=time_start,
-                classroom=classroom,
-                lesson_date=current_date,
-                subject=subject,
-                teacher=teacher,
-            ))
-            if lesson:
-                result.append(lesson)
-                continue
-            result.append(create_lesson(
-                title=subject.title,
-                date=current_date,
+                current_date=current_date,
                 time_start=time_start,
                 time_end=time_end,
-                group=group,
-                teacher=teacher,
-                note=note,
+                classroom=classroom,
                 subject=subject,
-                classroom=classroom
-            ))
+                teacher=teacher,
+                note=note
+            )
+            result.append(lesson)
         return result
 
     def parse_groups(self, group: BeautifulSoup) -> List[Group]:
-        groups_titles = self._get_title(group)
+        groups_titles = self.get_title(group)
         result = []
+        # Группы могут быть написаны следующим образом
+        # 112, 1-И
+        # Поэтому необходимо делить строку по запятой
         for title in groups_titles.split(","):
             group_obj = get_group_by_title(title)
             if group_obj:
+                self.log_operation(group_obj, "найдена")
                 result.append(group_obj)
                 continue
-            result.append(create_group(title=title))
+            group_obj = create_group(title=title)
+            self.log_operation(group_obj, "создана")
+            result.append(group_obj)
         return result
 
     def parse_classroom(self, classroom: BeautifulSoup) -> Classroom:
-        title = self._get_title(classroom)
+        title = self.get_title(classroom)
         result = get_classroom_by_name(title)
         if result:
+            self.log_operation(result, "найдена")
             return result
-        return create_classroom(title=title)
+        result = create_classroom(title=title)
+        self.log_operation(result, "создана")
+        return result
 
     def parse_subject(self, subject: BeautifulSoup) -> Subject:
-        title = self._get_title(subject)
+        title = self.get_title(subject)
         result = get_subject_by_title(title)
         if result:
+            self.log_operation(result, "обновлена")
             return result
-        return create_subject(title=title)
+        result = create_subject(title=title)
+        self.log_operation(result, "создана")
+        return result
 
     def parse_teacher(self, teacher: BeautifulSoup) -> Teacher:
-        title = self._get_title(teacher)
+        title = self.get_title(teacher)
         result = get_teacher_by_name(title)
         if result:
+            self.log_operation(result, "найдена")
             return result
-        return create_teacher(name=title)
+        result = create_teacher(name=title)
+        self.log_operation(result, "создана")
+        return result
 
     def parse_note(self, note: BeautifulSoup) -> Optional[str]:
-        return self._get_title(note, raise_exception=False)
+        return self.get_title(note, raise_exception=False)
 
-    def _get_title(self, item: BeautifulSoup, raise_exception: bool = True) -> Optional[str]:
-        result = item.get_text()
-        if result:
-            return result
-        if raise_exception:
-            raise ValueError("bs item has no title inside it")
-        return None
+    def parse_lesson(
+        self,
+        group: Group,
+        current_date: date,
+        time_start: time,
+        time_end: time,
+        classroom: Classroom,
+        subject: Subject,
+        teacher: Teacher,
+        note: str
+        ) -> Lesson:
+        lesson = get_lesson_by_params(AllFieldsParam(
+            group=group,
+            time_start=time_start,
+            classroom=classroom,
+            lesson_date=current_date,
+            subject=subject,
+            teacher=teacher,
+        ))
+        if lesson:
+            self.log_operation(lesson, "обновлена")
+            return lesson
+        lesson = create_lesson(
+            title=subject.title,
+            date=current_date,
+            time_start=time_start,
+            time_end=time_end,
+            group=group,
+            teacher=teacher,
+            note=note,
+            subject=subject,
+            classroom=classroom
+        )
+        self.log_operation(lesson, "создана")
+        return lesson
+
+    def log_operation(self, obj: LoggingMixin, operation: str = "создана/обновлена") -> None:
+        msg = f"Была {operation} запись {obj._meta.verbose_name}\n"
+        msg += obj.to_logging_message()
+        self.logger.info(msg)

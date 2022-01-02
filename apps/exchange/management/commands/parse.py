@@ -10,11 +10,14 @@ class Command(BaseCommand):
             "rtype": "3",
             "ucstep": "1",
             "exam": "0",
-            "datafrom": "01.12.2021",
-            "dataend": "31.12.2021",
+            "datafrom": "01.01.2022",
+            "dataend": "31.01.2022",
             "formo": "2",
             "formob": "1",
             "prdis": "0"
         }
-        parser = MainSiteParser.build_parser("http://inet.ibi.spb.ru/raspisan/rasp.php", payload)
+        parser = MainSiteParser.build_parser(
+            "http://inet.ibi.spb.ru/raspisan/rasp.php",
+            payload_data=payload
+        )
         parser.parse()
