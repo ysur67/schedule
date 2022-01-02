@@ -25,7 +25,7 @@ class GetLessonByDateAndClassroomParam:
         self.teacher = teacher
 
 
-class WholeLessonParam(GetLessonByDateAndClassroomParam):
+class AllFieldsParam(GetLessonByDateAndClassroomParam):
 
     def __init__(
         self,
@@ -55,8 +55,8 @@ def _(param: GetLessonByDateAndClassroomParam) -> Optional[Lesson]:
         teacher=param.teacher
     ).first()
 
-@get_lesson_by_params.register(WholeLessonParam)
-def _(param: WholeLessonParam) -> Optional[Lesson]:
+@get_lesson_by_params.register(AllFieldsParam)
+def _(param: AllFieldsParam) -> Optional[Lesson]:
     return Lesson.objects.filter(
         date=param.date,
         time_start=param.time_start,

@@ -8,7 +8,7 @@ from apps.timetables.models.teacher import Teacher
 from apps.timetables.usecases.classroom import create_classroom, get_classroom_by_name
 
 from apps.timetables.usecases.group import create_group, get_group_by_title
-from apps.timetables.usecases.lesson import WholeLessonParam, create_lesson, get_lesson_by_params
+from apps.timetables.usecases.lesson import AllFieldsParam, create_lesson, get_lesson_by_params
 from apps.timetables.usecases.subject import create_subject, get_subject_by_title
 from apps.timetables.usecases.teacher import create_teacher, get_teacher_by_name
 from .base import BaseHttpParser
@@ -75,7 +75,7 @@ class MainSiteParser(BaseHttpParser):
                 note = self.parse_note(cell)
         result = []
         for group in groups:
-            lesson = get_lesson_by_params(WholeLessonParam(
+            lesson = get_lesson_by_params(AllFieldsParam(
                 group=group,
                 time_start=time_start,
                 classroom=classroom,
