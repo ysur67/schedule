@@ -16,5 +16,8 @@ class Command(BaseCommand):
             "formob": "1",
             "prdis": "0"
         }
-        parser = MainSiteParser.build_parser("http://inet.ibi.spb.ru/raspisan/rasp.php", payload)
+        parser = MainSiteParser.build_parser(
+            "http://inet.ibi.spb.ru/raspisan/rasp.php",
+            payload_data=payload
+        )
         parser.parse()
