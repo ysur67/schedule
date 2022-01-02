@@ -13,6 +13,6 @@ class Teacher(IsActiveMixin, LoggingMixin):
         return self.name
 
     def to_logging_message(self) -> str:
-        msg = f"Объект: {self.Meta.verbose_name}\n" + \
+        msg = f"Объект: {self._meta.verbose_name}\n" + \
             f"Имя: {self.name}"
         return msg

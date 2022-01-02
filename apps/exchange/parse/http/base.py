@@ -20,4 +20,6 @@ class BaseHttpParser(BaseParser):
 
     def on_set_up(self):
         request = requests.post(self.url, data=self.payload_data)
+        if not request.ok:
+            raise ValueError("код ответа не находится в промежутке 200-299")
         self.soup = BeautifulSoup(request.text, "html.parser")

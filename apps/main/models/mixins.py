@@ -37,6 +37,6 @@ class BaseModel(TitleMixin, IsActiveMixin, LoggingMixin):
         abstract = True
 
     def to_logging_message(self) -> str:
-        msg = f"Объект: {self.Meta.verbose_name}\n" + \
+        msg = f"Объект: {self.__class__.__name__}\n" + \
         f"Наименование: {self.title}\n"
         return msg
