@@ -1,5 +1,6 @@
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
+from apps.feedback.bots.commands.echo import HelloCommand
 
 
 class VkBot(BaseBot):
@@ -14,4 +15,4 @@ class VkBot(BaseBot):
     def init_commands(self) -> None:
         @self.bot.on.message(text="Привет")
         async def echo(message: Message):
-            await message.answer(f"Привет, {message.peer_id}")
+            await message.answer(HelloCommand(message.peer_id).execute())
