@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 from apps.timetables.models import Lesson
 
 
-class MainSiteParser(BaseHttpParser):
+class LessonsParser(BaseHttpParser):
     logging_name: str = "Main Site Parser"
 
     def on_set_up(self):

@@ -1,6 +1,6 @@
 from typing import Any, Optional
 from django.core.management.base import BaseCommand
-from apps.exchange.parse import MainSiteParser
+from apps.exchange.parse import LessonsParser
 
 
 class Command(BaseCommand):
@@ -16,7 +16,7 @@ class Command(BaseCommand):
             "formob": "1",
             "prdis": "0"
         }
-        parser = MainSiteParser.build_parser(
+        parser = LessonsParser.build_parser(
             "http://inet.ibi.spb.ru/raspisan/rasp.php",
             payload_data=payload
         )
