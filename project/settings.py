@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.main',
     'apps.timetables',
     'apps.exchange',
+    'apps.feedback',
 ]
 
 MIDDLEWARE = [

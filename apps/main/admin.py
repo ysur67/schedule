@@ -1,3 +1,7 @@
 from django.contrib import admin
+from apps.main.models import ApplicationSettings
 
-# Register your models here.
+
+@admin.register(ApplicationSettings)
+class SettingsAdmin(admin.ModelAdmin):
+    pass
