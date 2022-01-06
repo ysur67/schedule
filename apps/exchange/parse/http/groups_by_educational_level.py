@@ -10,7 +10,7 @@ def has_selected_attribute(tag: BeautifulSoup) -> bool:
     return tag.has_attr("selected")
 
 
-class GroupsParser(BaseHttpParser):
+class GroupsByEducationalLevelsParser(BaseHttpParser):
     logging_name = "Groups Parser"
 
     def parse(self):
