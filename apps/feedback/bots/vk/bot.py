@@ -4,9 +4,12 @@ from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.utils.keyboard.groups import GroupsKeyboard
 from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
+from apps.feedback.bots.utils.mappers.keyboard.vk import ToVkKeyboardMapper
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from apps.timetables.usecases.educational_level import get_all_educational_levels, get_educational_level_by_title
 from asgiref.sync import sync_to_async
+
+from apps.timetables.usecases.group import get_groups_by_educational_level
 
 
 class VkBot(BaseBot):
@@ -25,14 +28,18 @@ class VkBot(BaseBot):
 
         @self.bot.on.message(text="Уровень")
         async def get_educational_levels(message: Message):
-            _keyboard = sync_to_async(EducationalLevelsKeyboard)
-            keyboard = await _keyboard(levels=get_all_educational_levels())
-            await message.answer(EducationalLevelsCommand().execute(), keyboard=keyboard.to_api())
+            _keyboard = sync_to_async(EducationalLevelsKeyboard.build_instance)
+            keyboard = await _keyboard(get_all_educational_levels())
+            mapper = ToVkKeyboardMapper(keyboard)
+            await message.answer(EducationalLevelsCommand().execute(), keyboard=mapper.convert())
 
         @self.bot.on.message(EducationalLevelExistRule())
         async def get_groups(message: Message):
-            _keyboard = sync_to_async(GroupsKeyboard)
+            _keyboard = sync_to_async(GroupsKeyboard.build_instance)
             _get_level = sync_to_async(get_educational_level_by_title)
             level = await _get_level(message.text)
-            keyboard = await _keyboard(level=level)
-            await message.answer("asdfasdfasfdsakjl", keyboard=keyboard.to_api())
+            _get_groups = sync_to_async(get_groups_by_educational_level)
+            groups = await _get_groups(level)
+            keyboard = await _keyboard(groups)
+            mapper = ToVkKeyboardMapper(keyboard)
+            await message.answer("asdfasdfasfdsakjl", keyboard=mapper.convert())
