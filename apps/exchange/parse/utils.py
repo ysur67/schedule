@@ -1,5 +1,6 @@
 from datetime import date, datetime, time
 from typing import Tuple
+from bs4 import BeautifulSoup
 
 
 def get_time_range_from_string(string: str) -> Tuple[time, time]:
@@ -68,3 +69,7 @@ def get_date_from_string(string: str) -> date:
         raise TypeError("date format is invalid")
     DATE_FORMAT = "%d.%m.%Y"
     return datetime.strptime(initial[0], DATE_FORMAT).date()
+
+
+def has_selected_attribute(tag: BeautifulSoup) -> bool:
+    return tag.has_attr("selected")
