@@ -3,6 +3,7 @@ from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
+from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from apps.timetables.usecases.educational_level import get_all_educational_levels
 from asgiref.sync import sync_to_async
 
@@ -26,3 +27,7 @@ class VkBot(BaseBot):
             _keyboard = sync_to_async(EducationalLevelsKeyboard)
             keyboard = await _keyboard(levels=get_all_educational_levels())
             await message.answer(EducationalLevelsCommand().execute(), keyboard=keyboard.to_api())
+
+        @self.bot.on.message(EducationalLevelExistRule())
+        async def get_groups(message: Message):
+            await message.answer("asdfasdfasfdsakjl")

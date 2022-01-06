@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from apps.timetables.models import Group
 
 
@@ -8,3 +8,7 @@ def get_group_by_title(title: str) -> Optional[Group]:
 
 def create_group(**options) -> Group:
     return Group.objects.create(**options)
+
+
+def get_all_groups() -> List[Group]:
+    return Group.objects.filter(is_active=True)
