@@ -2,7 +2,8 @@ from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
-from apps.feedback.bots.vk.keyboard import EducationalLevelsKeyboard, GroupsKeyboard
+from apps.feedback.bots.utils.keyboard.groups import GroupsKeyboard
+from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from apps.timetables.usecases.educational_level import get_all_educational_levels, get_educational_level_by_title
 from asgiref.sync import sync_to_async
