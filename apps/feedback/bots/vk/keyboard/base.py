@@ -1,7 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+from vkbottle import Keyboard
 
 
 class BaseKeyboard(ABC):
+    result: Keyboard
 
     @classmethod
     def build_instance(cls) -> None:
@@ -12,8 +14,9 @@ class BaseKeyboard(ABC):
     def __init__(self) -> None:
         super().__init__()
 
-    def init_keyboard(self) -> None:
-        return
+    @abstractmethod
+    def init_keyboard(self) -> Keyboard:
+        pass
 
     def to_api(self) -> str:
-        return
+        return self.result.get_json()
