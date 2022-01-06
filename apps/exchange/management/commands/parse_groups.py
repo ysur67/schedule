@@ -1,6 +1,6 @@
 from typing import Any, Optional
 from django.core.management import BaseCommand
-from apps.exchange.parse.http import GroupsByEducationalLevelsParser, RequestType
+from apps.exchange.parse.http import RequestType
 from apps.exchange.parse.http.groups import AllGroupsParser
 
 
