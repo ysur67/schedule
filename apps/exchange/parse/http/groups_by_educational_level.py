@@ -1,17 +1,13 @@
 from typing import List
-from bs4 import BeautifulSoup
+from apps.exchange.parse.utils import has_selected_attribute
 from apps.timetables.models.group import EducationalLevel, Group
 from apps.timetables.usecases.educational_level import create_educational_level, get_educational_level_by_title
 from apps.timetables.usecases.group import create_group, get_group_by_title
 from .base import BaseHttpParser
 
 
-def has_selected_attribute(tag: BeautifulSoup) -> bool:
-    return tag.has_attr("selected")
-
-
 class GroupsByEducationalLevelsParser(BaseHttpParser):
-    logging_name = "Groups Parser"
+    logging_name = "Groups By Educational level"
 
     def parse(self):
         level = self.parse_level()
