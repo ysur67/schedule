@@ -1,0 +1,1 @@
+from .educational_level_rule import EducationalLevelExistRule
