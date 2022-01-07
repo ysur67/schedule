@@ -1,11 +1,14 @@
+from apps.feedback.bots.utils.const import Messengers
 from .base import BaseCommand
 
 
 class HelloCommand(BaseCommand):
 
-    def __init__(self, user_id: str) -> None:
-        super().__init__()
-        self._id = user_id
+    @property
+    def user_id(self) -> str:
+        return self._require_field("user_id")
 
-    def execute(self) -> None:
-        return f"Привет, {self._id}!"
+    async def _vk_execute(self) -> None:
+        return {
+            "message": f"Привет, {self.user_id}!"
+        }
