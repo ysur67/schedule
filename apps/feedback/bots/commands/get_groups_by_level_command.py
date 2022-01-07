@@ -22,7 +22,6 @@ class GetGroupsByLevelCommand(BaseCommand):
             return await self.build_response_with_text(groups)
         return await self.build_response_with_keyboard(groups)
 
-
     async def build_response_with_keyboard(self, groups: Iterable[Group]) -> Dict:
         _keyboard = GroupsKeyboard(groups)
         keyboard = await sync_to_async(_keyboard.to_vk_api)()
@@ -41,7 +40,6 @@ class GetGroupsByLevelCommand(BaseCommand):
         }
 
     def _build_message(self, message: str, groups: Iterable[Group]) -> str:
-        OFFSET = 10
         for index, item in enumerate(groups):
             message += f"{item.title}"
             if not index == len(groups) - 1:
