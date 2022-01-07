@@ -1,6 +1,4 @@
 from typing import Any, Iterable
-
-from vkbottle.api import request_rescheduler
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
 from .base import BaseKeyboard
 from vkbottle import Keyboard, Text

@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
+from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
@@ -38,11 +39,11 @@ class VkBot(BaseBot):
     async def _send_response(self, response: Any, message: Message) -> None:
         raise NotImplementedError(f"There is no approach for type {type(response)}")
 
-    @_send_response.register(list)
-    async def _(self, response: List[Dict], message: Message) -> None:
-        for item in response:
-            await message.answer(**item)
+    @_send_response.register(SingleMessage)
+    async def _(self, response: SingleMessage, message: Message) -> None:
+        return await message.answer(**response.to_dict())
 
-    @_send_response.register(dict)
-    async def _(self, response: Dict, message: Message) -> None:
-        return await message.answer(**response)
+    @_send_response.register(MultipleMessages)
+    async def _(self, response: MultipleMessages, message: Message) -> None:
+        for item in response.messages:
+            await message.answer(**item.to_dict())

@@ -1,6 +1,25 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional, Union
 from apps.feedback.bots.utils.const import Messengers
+from dataclasses import dataclass
+
+
+@dataclass
+class SingleMessage:
+    message: str
+    keyboard: Optional[Any] = None
+
+    def to_dict(self) -> Dict:
+        return {
+            "message": self.message,
+            "keyboard": self.keyboard
+        }
+
+
+@dataclass
+class MultipleMessages:
+    messages: Iterable[SingleMessage]
+
 
 class BaseCommand(ABC):
     type: Messengers
@@ -9,13 +28,13 @@ class BaseCommand(ABC):
         self.type = messenger
         self.kwargs = kwargs
 
-    async def execute(self) -> Iterable[Dict]:
+    async def execute(self) -> Union[SingleMessage, MultipleMessages]:
         if self.type == Messengers.VK:
             return await self._vk_execute()
         raise NotImplementedError(f"There is no approach for type {self.type}")
 
     @abstractmethod
-    async def _vk_execute(self) -> Iterable[Dict]:
+    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
         pass
 
     def _require_field(self, key: str, raise_exception: bool = True) -> Any:
@@ -25,3 +44,4 @@ class BaseCommand(ABC):
         if raise_exception:
             raise ValueError(f"You should provide {key} kwarg for this command")
         return result
+

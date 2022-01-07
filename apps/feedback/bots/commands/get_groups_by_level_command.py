@@ -1,6 +1,6 @@
-from typing import Dict, Iterable
+from typing import Dict, Iterable, Union
 from apps.timetables.models.group import Group
-from .base import BaseCommand
+from .base import BaseCommand, MultipleMessages, SingleMessage
 from asgiref.sync import sync_to_async
 from apps.timetables.usecases.educational_level import get_educational_level_by_title
 from apps.timetables.usecases.group import get_groups_by_educational_level
@@ -14,7 +14,7 @@ class GetGroupsByLevelCommand(BaseCommand):
     def message(self) -> str:
         return self._require_field("message")
 
-    async def _vk_execute(self) -> Iterable[Dict]:
+    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
         amount_of_groups = await sync_to_async(groups.count)()
@@ -22,22 +22,17 @@ class GetGroupsByLevelCommand(BaseCommand):
             return await self.build_response_with_text(groups)
         return await self.build_response_with_keyboard(groups)
 
-    async def build_response_with_keyboard(self, groups: Iterable[Group]) -> Iterable[Dict]:
+    async def build_response_with_keyboard(self, groups: Iterable[Group]) -> Union[SingleMessage, MultipleMessages]:
         _keyboard = GroupsKeyboard(groups)
         keyboard = await sync_to_async(_keyboard.to_vk_api)()
-        return [{
-            "message": "Выберите одну из групп",
-            "keyboard": keyboard
-        }]
+        return SingleMessage(message="Выберите одну из групп", keyboard=keyboard)
 
-    async def build_response_with_text(self, groups: Iterable[Group]) -> Iterable[Dict]:
+    async def build_response_with_text(self, groups: Iterable[Group]) -> Union[SingleMessage, MultipleMessages]:
         message = "Упс, кажется на этом уровне слишком много групп...\n"
         message += "К сожалению, тебе придется выбрать ее из предложенного списка "
         message += "и написать ее самому.\n"
         message = await sync_to_async(self._build_message)(message, groups)
-        return [{
-            "message": message
-        }]
+        return SingleMessage(message=message)
 
     def _build_message(self, message: str, groups: Iterable[Group]) -> str:
         for index, item in enumerate(groups):
