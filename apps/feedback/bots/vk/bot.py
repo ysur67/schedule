@@ -1,12 +1,16 @@
 from typing import Any
 from vkbottle.bot import Bot, Message
+from vkbottle_types.objects import MessagesAudioMessage
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
+from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
+
+from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
 
 
 class VkBot(BaseBot):
@@ -25,7 +29,7 @@ class VkBot(BaseBot):
             result = await HelloCommand(user_id=message.peer_id).execute()
             await self._send_response(result, message)
 
-        @self.bot.on.message(text=["Уровень", "Главное меню"])
+        @self.bot.on.message(text=["Уровень", "Главное меню", "Начать"])
         async def get_educational_levels(message: Message):
             result = await EducationalLevelsCommand().execute()
             await self._send_response(result, message)
@@ -33,6 +37,11 @@ class VkBot(BaseBot):
         @self.bot.on.message(EducationalLevelExistRule())
         async def get_groups(message: Message):
             result = await GetGroupsByLevelCommand(message=message.text).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(GroupExistRule())
+        async def save_current_group(message: Message):
+            result = await SaveCurrentGroupCommand(group=message.text).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod
