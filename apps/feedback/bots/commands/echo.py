@@ -9,6 +9,6 @@ class HelloCommand(BaseCommand):
         return self._require_field("user_id")
 
     async def _vk_execute(self) -> None:
-        return {
+        return [{
             "message": f"Привет, {self.user_id}!"
-        }
+        }]
