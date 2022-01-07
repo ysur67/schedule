@@ -16,4 +16,4 @@ def get_all_groups() -> List[Group]:
 
 
 def get_groups_by_educational_level(level: EducationalLevel) -> List[Group]:
-    return Group.objects.filter(level=level)
+    return get_all_groups().filter(level=level)

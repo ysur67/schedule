@@ -1,14 +1,15 @@
-from typing import Dict, Iterable, Union
+from typing import Dict, Iterable, List, Union
+from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
 from apps.timetables.models.group import Group
 from .base import BaseCommand, MultipleMessages, SingleMessage
 from asgiref.sync import sync_to_async
 from apps.timetables.usecases.educational_level import get_educational_level_by_title
 from apps.timetables.usecases.group import get_groups_by_educational_level
 from apps.feedback.bots.utils.keyboard import GroupsKeyboard
+from django.core.paginator import Paginator
 
 
 class GetGroupsByLevelCommand(BaseCommand):
-    VK_MAX_BUTTONS_IN_KEYBOARD = 40
 
     @property
     def message(self) -> str:
@@ -18,8 +19,8 @@ class GetGroupsByLevelCommand(BaseCommand):
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
         amount_of_groups = await sync_to_async(groups.count)()
-        if amount_of_groups > self.VK_MAX_BUTTONS_IN_KEYBOARD:
-            return await self.build_response_with_text(groups)
+        if amount_of_groups > VK_MAX_BUTTONS_IN_KEYBOARD:
+            return await self.build_response_with_multiple_messages(groups)
         return await self.build_response_with_keyboard(groups)
 
     async def build_response_with_keyboard(self, groups: Iterable[Group]) -> Union[SingleMessage, MultipleMessages]:
@@ -27,16 +28,17 @@ class GetGroupsByLevelCommand(BaseCommand):
         keyboard = await sync_to_async(_keyboard.to_vk_api)()
         return SingleMessage(message="Выберите одну из групп", keyboard=keyboard)
 
-    async def build_response_with_text(self, groups: Iterable[Group]) -> Union[SingleMessage, MultipleMessages]:
-        message = "Упс, кажется на этом уровне слишком много групп...\n"
-        message += "К сожалению, тебе придется выбрать ее из предложенного списка "
-        message += "и написать ее самому.\n"
-        message = await sync_to_async(self._build_message)(message, groups)
-        return SingleMessage(message=message)
-
-    def _build_message(self, message: str, groups: Iterable[Group]) -> str:
-        for index, item in enumerate(groups):
-            message += f"{item.title}"
-            if not index == len(groups) - 1:
-                message += ", "
-        return message
+    async def build_response_with_multiple_messages(self, page: Iterable[Group]) -> Union[SingleMessage, MultipleMessages]:
+        ITEMS_PER_PAGE = 8
+        paginator = Paginator(page.order_by("id"), ITEMS_PER_PAGE)
+        result: List[SingleMessage] = []
+        pages_range = await sync_to_async(getattr)(paginator, "page_range", [])
+        for index in pages_range:
+            page = await sync_to_async(paginator.page)(index)
+            _keyboard = GroupsKeyboard(page.object_list, is_inline=True)
+            keyboard = await sync_to_async(_keyboard.to_vk_api)()
+            result.append(SingleMessage(
+                message="Выберите одну из групп",
+                keyboard=keyboard
+            ))
+        return MultipleMessages(messages=result)

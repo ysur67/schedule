@@ -6,8 +6,10 @@ from collections.abc import Iterable
 
 class BaseKeyboard(ABC):
 
-    def __init__(self, initial: Any, **kwargs: Dict) -> None:
+    def __init__(self, initial: Any, is_inline: bool = False, has_cancel_button: bool = True) -> None:
         self.data = initial
+        self.is_inline = is_inline
+        self.has_cancel_button = has_cancel_button
 
     @abstractmethod
     def to_vk_api(self) -> str:
