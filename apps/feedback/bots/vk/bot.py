@@ -22,7 +22,7 @@ class VkBot(BaseBot):
             result = await HelloCommand(user_id=message.peer_id).execute()
             await message.answer(**result)
 
-        @self.bot.on.message(text="Уровень")
+        @self.bot.on.message(text=["Уровень", "Главное меню"])
         async def get_educational_levels(message: Message):
             result = await EducationalLevelsCommand().execute()
             await message.answer(**result)
