@@ -11,6 +11,6 @@ class EducationalLevelsKeyboard(BaseKeyboard):
         self.data: List[EducationalLevel]
         for index, value in enumerate(self.data):
             result.add(Text(value.title))
-            if not self._is_last(index):
+            if not self._is_last(index, self.data):
                 result.row()
         return result.get_json()

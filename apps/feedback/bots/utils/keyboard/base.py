@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
-from vkbottle import Keyboard
+from typing import Any, Dict, Union, List
 from collections.abc import Iterable
 
 
@@ -12,10 +11,10 @@ class BaseKeyboard(ABC):
         self.has_cancel_button = has_cancel_button
 
     @abstractmethod
-    def to_vk_api(self) -> str:
+    def to_vk_api(self) -> Union[str, List[str]]:
         return self.result.get_json()
 
-    def _is_last(self, index: int) -> bool:
-        if not isinstance(self.data, Iterable):
+    def _is_last(self, index: int, data: Iterable) -> bool:
+        if not isinstance(data, Iterable):
             return False
-        return index == len(self.data) - 1
+        return index == len(data) - 1
