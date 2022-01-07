@@ -13,6 +13,9 @@ class Profile(BaseModel):
 
 
 class MessengerModel(BaseModel):
+    code = models.CharField(
+        verbose_name="Код", max_length=300, default="", unique=True
+    )
 
     class Meta:
         verbose_name = "Мессенджер"
