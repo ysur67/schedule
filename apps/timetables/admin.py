@@ -3,12 +3,13 @@ from apps.timetables.models import Group, Teacher, EducationalLevel, Classroom, 
 
 
 @admin.register(Group)
-class TeacherAdmin(admin.ModelAdmin):
-    pass
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ("title", "level",)
+    list_filter = ("level",)
 
 
 @admin.register(Teacher)
-class GroupAdmin(admin.ModelAdmin):
+class TeacherAdmin(admin.ModelAdmin):
     pass
 
 

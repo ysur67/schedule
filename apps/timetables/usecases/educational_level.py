@@ -9,5 +9,6 @@ def get_educational_level_by_title(title: str) -> Optional[EducationalLevel]:
 def create_educational_level(**options) -> EducationalLevel:
     return EducationalLevel.objects.create(**options)
 
+
 def get_all_educational_levels() -> List[EducationalLevel]:
     return EducationalLevel.objects.filter(is_active=True)

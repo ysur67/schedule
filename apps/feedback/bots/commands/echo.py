@@ -1,11 +1,15 @@
-from .base import BaseCommand
+from typing import Union
+
+from vkbottle.tools.dev.mini_types.bot import message
+from apps.feedback.bots.utils.const import Messengers
+from .base import BaseCommand, MultipleMessages, SingleMessage
 
 
 class HelloCommand(BaseCommand):
 
-    def __init__(self, user_id: str) -> None:
-        super().__init__()
-        self._id = user_id
+    @property
+    def user_id(self) -> str:
+        return self._require_field("user_id")
 
-    def execute(self) -> None:
-        return f"Привет, {self._id}!"
+    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+        return SingleMessage(message=f"Привет, {self.user_id}!")
