@@ -1,6 +1,5 @@
 from typing import Any
 from vkbottle.bot import Bot, Message
-from vkbottle_types.objects import MessagesAudioMessage
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.echo import HelloCommand
