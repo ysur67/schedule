@@ -36,7 +36,8 @@ class MessengerAccount(BaseModel):
     )
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE,
-        related_name="messenger_accounts", verbose_name="Профиль"
+        related_name="messenger_accounts", verbose_name="Профиль",
+        null=True
     )
 
     class Meta:
@@ -44,4 +45,4 @@ class MessengerAccount(BaseModel):
         verbose_name_plural = "Аккаунты в мессенджере"
 
     def __str__(self) -> str:
-        return self.profile.title
+        return self.account_id

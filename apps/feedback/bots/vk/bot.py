@@ -6,6 +6,7 @@ from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
+from apps.feedback.bots.vk.middlewares.get_or_create_profile import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
 
@@ -17,6 +18,7 @@ class VkBot(BaseBot):
     def __init__(self, token: str) -> None:
         super().__init__(token)
         self.bot = Bot(self.token)
+        self.bot.labeler.message_view.register_middleware(CreateAccountMiddleware)
         self.init_commands()
 
     def listen(self) -> None:

@@ -15,3 +15,8 @@ class MessengerAccountInline(admin.TabularInline):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     inlines = (MessengerAccountInline,)
+
+
+@admin.register(MessengerAccount)
+class MessengerAccountAdmin(admin.ModelAdmin):
+    pass

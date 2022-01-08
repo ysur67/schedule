@@ -1,1 +1,1 @@
-from .get_or_create_profile import GetOrCreateProfileMiddleware
+from .get_or_create_profile import CreateAccountMiddleware
