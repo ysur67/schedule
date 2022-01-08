@@ -22,6 +22,10 @@ class Profile(BaseModel):
     def __str__(self) -> str:
         return self.title
 
+    def set_group(self, new: Group) -> None:
+        self.current_group = new
+        return self.save()
+
 
 class MessengerModel(BaseModel):
     code = models.CharField(

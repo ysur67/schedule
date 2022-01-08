@@ -9,7 +9,6 @@ from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGr
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
-
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
 
 
@@ -42,7 +41,10 @@ class VkBot(BaseBot):
 
         @self.bot.on.message(GroupExistRule())
         async def save_current_group(message: Message):
-            result = await SaveCurrentGroupCommand(group=message.text).execute()
+            result = await SaveCurrentGroupCommand(
+                group=message.text,
+                account_id=message.peer_id
+            ).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod

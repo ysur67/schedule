@@ -8,5 +8,9 @@ def get_profile_by_messenger_account(account: MessengerAccount) -> Optional[Prof
     ).first()
 
 
+def get_profile_by_account_id(id: str) -> Optional[Profile]:
+    return Profile.objects.filter(messenger_accounts__account_id=id).first()
+
+
 def create_profile(**options) -> Profile:
     return Profile.objects.create(**options)
