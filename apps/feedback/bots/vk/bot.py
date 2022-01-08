@@ -35,7 +35,7 @@ class VkBot(BaseBot):
             result = await GetMainMenuCommand().execute()
             await self._send_response(result, message)
 
-        @self.bot.on.message(text=["Уровень"])
+        @self.bot.on.message(text=["Уровень", "Выбор группы"])
         async def get_educational_levels(message: Message):
             result = await EducationalLevelsCommand().execute()
             await self._send_response(result, message)
