@@ -1,8 +1,17 @@
 from django.db import models
 from apps.main.models.mixins import BaseModel
+from apps.timetables.models import Group
 
 
 class Profile(BaseModel):
+    send_notifications = models.BooleanField(
+        verbose_name="Отправлять уведомления?", default=False
+    )
+    current_group = models.ForeignKey(
+        Group, on_delete=models.SET_NULL,
+        related_name="profiles", null=True, blank=True,
+        verbose_name="Текущий выбор группы"
+    )
 
     class Meta:
         verbose_name = "Пользователь"
