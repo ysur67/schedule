@@ -13,3 +13,12 @@ class Commands(Enum):
 
 
 VK_MAX_BUTTONS_IN_KEYBOARD = 40
+
+
+MAIN_MENU_KEYBOARD_LAYOUT = [
+    "Выбор группы",
+    "Настройки",
+    "Статус"
+]
+assert len(MAIN_MENU_KEYBOARD_LAYOUT) <= VK_MAX_BUTTONS_IN_KEYBOARD, \
+    f"Keyboards can't have more than {VK_MAX_BUTTONS_IN_KEYBOARD} buttons"

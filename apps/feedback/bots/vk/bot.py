@@ -5,6 +5,7 @@ from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
+from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
@@ -29,7 +30,12 @@ class VkBot(BaseBot):
             result = await HelloCommand(user_id=message.peer_id).execute()
             await self._send_response(result, message)
 
-        @self.bot.on.message(text=["Уровень", "Главное меню", "Начать"])
+        @self.bot.on.message(text=["Начать", "Главное меню"])
+        async def get_main_menu(message: Message):
+            result = await GetMainMenuCommand().execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text=["Уровень"])
         async def get_educational_levels(message: Message):
             result = await EducationalLevelsCommand().execute()
             await self._send_response(result, message)
