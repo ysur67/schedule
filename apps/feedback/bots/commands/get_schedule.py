@@ -21,7 +21,7 @@ class GetScheduleCommand(CommandWithProfile):
         group = await sync_to_async(self.profile.get_group)()
         lessons = await sync_to_async(list)(get_lessons_by_group_and_date_range(group, self.date_start))
         _build_message = sync_to_async(build_lesson_message)
-        result = "".join([await _build_message(item) for item in lessons])
+        result = "========\n".join([await _build_message(item) for item in lessons])
         if not result:
             result = "Упс, кажется у тебя нет пар на текущую неделю, "
             result += "но все же проверь информацию..."

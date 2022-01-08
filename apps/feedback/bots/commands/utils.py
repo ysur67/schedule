@@ -1,3 +1,6 @@
+from datetime import date, time
+from functools import singledispatch
+from typing import Any
 from apps.feedback.models import Profile
 from apps.timetables.models import Lesson
 
@@ -16,9 +19,22 @@ def build_status_message(profile: Profile) -> str:
 
 def build_lesson_message(lesson: Lesson) -> str:
     result = f"Дисциплина: {lesson.subject.title}\n"
-    result += f"Дата: {lesson.date}\n"
-    result += f"Время: {lesson.time_start} - {lesson.time_end}\n"
+    result += f"Дата: {to_message_format(lesson.date)}\n"
+    result += f"Время: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
     result += f"Преподаватель: {lesson.teacher.name}\n"
     result += f"Аудитория: {lesson.classroom.title}\n"
     result += f"Примечание: {lesson.note}\n"
     return result
+
+
+@singledispatch
+def to_message_format(data: Any) -> str:
+    raise NotImplementedError(f"There is no approach for type {type(data)}")
+
+@to_message_format.register(date)
+def _(data: date) -> str:
+    return data.strftime('%d.%m.%Y')
+
+@to_message_format.register(time)
+def _(data: time) -> str:
+    return data.strftime("%H:%M")
