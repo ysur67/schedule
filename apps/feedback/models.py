@@ -1,4 +1,6 @@
+from typing import Optional
 from django.db import models
+from vkbottle_types.objects import AccountAccountCounters
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group
 
@@ -55,3 +57,10 @@ class MessengerAccount(BaseModel):
 
     def __str__(self) -> str:
         return self.account_id
+
+    def set_profile(self, new: profile) -> None:
+        self.profile = new
+        return self.save()
+
+    def get_profile(self) -> Optional[Profile]:
+        return self.profile

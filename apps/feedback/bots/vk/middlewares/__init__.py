@@ -1,1 +1,1 @@
-from .get_or_create_profile import CreateAccountMiddleware
+from .create_account import CreateAccountMiddleware
