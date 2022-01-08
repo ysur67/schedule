@@ -7,6 +7,7 @@ from apps.feedback.bots.commands.educational_levels import EducationalLevelsComm
 from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
+from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
@@ -36,7 +37,7 @@ class VkBot(BaseBot):
             result = await GetMainMenuCommand().execute()
             await self._send_response(result, message)
 
-        @self.bot.on.message(text=["Уровень", "Выбор группы"])
+        @self.bot.on.message(text=["Уровень", "Выбор группы", "Выбрать группу"])
         async def get_educational_levels(message: Message):
             result = await EducationalLevelsCommand().execute()
             await self._send_response(result, message)
@@ -57,6 +58,11 @@ class VkBot(BaseBot):
         @self.bot.on.message(text="Статус")
         async def get_current_profile_status(message: Message):
             result = await GetCurrentStatusCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Настройки")
+        async def get_settings(message: Message):
+            result = await GetSettingsCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod

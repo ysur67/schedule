@@ -1,7 +1,6 @@
 from typing import Optional
 from django.db import models
 from django.db.models.query import QuerySet
-from vkbottle_types.objects import AccountAccountCounters
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group
 

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Union, List
 from collections.abc import Iterable
+from dataclasses import dataclass
 
 
 class BaseKeyboard(ABC):
@@ -18,3 +19,8 @@ class BaseKeyboard(ABC):
         if not isinstance(data, Iterable):
             return False
         return index == len(data) - 1
+
+
+@dataclass
+class Button:
+    title: str
