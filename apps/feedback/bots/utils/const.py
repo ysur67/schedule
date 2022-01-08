@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class Messengers(Enum):
-    VK = "VK"
-    TELEGRAM = "TELGRAM"
+    VK = "vk"
+    TELEGRAM = "telegram"
 
 
 class Commands(Enum):

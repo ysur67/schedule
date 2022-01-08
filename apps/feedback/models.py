@@ -1,5 +1,6 @@
 from typing import Optional
 from django.db import models
+from django.db.models.query import QuerySet
 from vkbottle_types.objects import AccountAccountCounters
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group
@@ -25,6 +26,12 @@ class Profile(BaseModel):
     def set_group(self, new: Group) -> None:
         self.current_group = new
         return self.save()
+
+    def get_group(self) -> Optional[Group]:
+        return self.current_group
+
+    def get_accounts_in_messengers(self) -> QuerySet:
+        return self.messenger_accounts.all()
 
 
 class MessengerModel(BaseModel):
@@ -68,3 +75,6 @@ class MessengerAccount(BaseModel):
 
     def get_profile(self) -> Optional[Profile]:
         return self.profile
+
+    def get_messenger(self) -> MessengerModel:
+        return self.messenger

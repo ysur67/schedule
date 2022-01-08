@@ -4,6 +4,7 @@ from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
+from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
@@ -51,6 +52,11 @@ class VkBot(BaseBot):
                 group=message.text,
                 account_id=message.peer_id
             ).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Статус")
+        async def get_current_profile_status(message: Message):
+            result = await GetCurrentStatusCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod
