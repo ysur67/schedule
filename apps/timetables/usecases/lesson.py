@@ -1,5 +1,7 @@
 from typing import Any, Optional
-from datetime import time, date
+from datetime import time, date, timedelta
+
+from django.db.models.query import QuerySet
 from apps.timetables.models import Lesson
 from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
@@ -69,3 +71,9 @@ def _(param: AllFieldsParam) -> Optional[Lesson]:
 
 def create_lesson(**options) -> Lesson:
     return Lesson.objects.create(**options)
+
+
+def get_lessons_by_group_and_date_range(group: Group, start: date, end: date = None) -> QuerySet[Lesson]:
+    if end is None:
+        end = start + timedelta(days=7)
+    return Lesson.objects.filter(date__range=[start, end], group=group)

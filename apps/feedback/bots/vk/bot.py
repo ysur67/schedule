@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
@@ -7,6 +8,7 @@ from apps.feedback.bots.commands.educational_levels import EducationalLevelsComm
 from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
+from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
@@ -63,6 +65,14 @@ class VkBot(BaseBot):
         @self.bot.on.message(text="Настройки")
         async def get_settings(message: Message):
             result = await GetSettingsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Показать расписание")
+        async def show_schedule(message: Message):
+            result = await GetScheduleCommand(
+                date_start=datetime.now().date(),
+                account_id=message.peer_id
+            ).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod
