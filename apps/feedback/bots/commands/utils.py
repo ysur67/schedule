@@ -2,6 +2,7 @@ from datetime import date, time
 from functools import singledispatch
 from typing import Any
 from apps.feedback.models import Profile
+from apps.main.utils.date import get_day_of_week
 from apps.timetables.models import Lesson
 
 
@@ -20,7 +21,8 @@ def build_status_message(profile: Profile) -> str:
 
 
 def build_lesson_message(lesson: Lesson) -> str:
-    result = f"Дисциплина: {lesson.subject.title}\n"
+    result = f"{get_day_of_week(lesson.date).upper()}\n\n"
+    result += f"Дисциплина: {lesson.subject.title}\n"
     result += f"Дата: {to_message_format(lesson.date)}\n"
     result += f"Время: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
     result += f"Преподаватель: {lesson.teacher.name}\n"
