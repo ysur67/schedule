@@ -25,8 +25,11 @@ class GetScheduleCommand(CommandWithProfile):
             return SingleMessage(message=result)
         lessons = await sync_to_async(list)(get_lessons_by_group_and_date_range(group, self.date_start))
         _build_message = sync_to_async(build_lesson_message)
-        result = "========\n".join([await _build_message(item) for item in lessons])
-        if not result:
-            result = "Упс, кажется у тебя нет пар на текущую неделю, "
-            result += "но все же проверь информацию..."
+        result = f"Расписание {self.date_start}\n"
+        result += f"Группа {group.title}\n\n"
+        lessons_message = "========\n".join([await _build_message(item) for item in lessons])
+        if not lessons_message:
+            lessons_message = "Упс, кажется у тебя нет пар на текущую неделю, "
+            lessons_message += "но все же проверь информацию..."
+        result += lessons_message
         return SingleMessage(message=result)
