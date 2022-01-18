@@ -32,6 +32,10 @@ class Profile(BaseModel):
     def get_accounts_in_messengers(self) -> QuerySet:
         return self.messenger_accounts.all()
 
+    def toggle_notifications(self, value: bool) -> None:
+        self.send_notifications = value
+        return self.save()
+
 
 class MessengerModel(BaseModel):
     code = models.CharField(

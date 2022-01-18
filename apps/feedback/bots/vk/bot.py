@@ -11,6 +11,8 @@ from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
+from apps.feedback.bots.commands.turn_off_notifications import TurnOffNotificationsCommand
+from apps.feedback.bots.commands.turn_on_notifications import TurnOnNotificationsCommand
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
@@ -74,6 +76,18 @@ class VkBot(BaseBot):
                 account_id=message.peer_id
             ).execute()
             await self._send_response(result, message)
+
+        @self.bot.on.message(text="Включить уведомления")
+        async def turn_on_notifications(message: Message):
+            result = await TurnOnNotificationsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+
+        @self.bot.on.message(text="Отключить уведомления")
+        async def turn_on_notifications(message: Message):
+            result = await TurnOffNotificationsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
 
     @singledispatchmethod
     async def _send_response(self, response: Any, message: Message) -> None:
