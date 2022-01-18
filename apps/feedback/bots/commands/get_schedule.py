@@ -19,6 +19,10 @@ class GetScheduleCommand(CommandWithProfile):
 
     async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
         group = await sync_to_async(self.profile.get_group)()
+        if not group:
+            result = "Упс, у тебя не выбрана группа.\n"
+            result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
+            return SingleMessage(message=result)
         lessons = await sync_to_async(list)(get_lessons_by_group_and_date_range(group, self.date_start))
         _build_message = sync_to_async(build_lesson_message)
         result = "========\n".join([await _build_message(item) for item in lessons])
