@@ -1,6 +1,6 @@
 from typing import Union
 
-from apps.feedback.bots.commands.utils import build_lessons_message
+from apps.feedback.bots.commands.utils import build_lessons_message, to_message_format
 from apps.timetables.usecases.lesson import get_lessons_dict_by_group_and_date_range
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
 from datetime import date, timedelta
@@ -27,7 +27,8 @@ class GetScheduleCommand(CommandWithProfile):
         date_end = self.date_end or date_start + timedelta(days=self.profile.days_offset)
         lessons = await sync_to_async(get_lessons_dict_by_group_and_date_range)(group, date_start, date_end)
         if not lessons:
-            result = "Упс, кажется у тебя нет пар на текущую неделю, "
+            result = f"Упс, кажется у тебя нет пар c {to_message_format(date_start)} "
+            result += f"по {to_message_format(date_end)}, "
             result += "но все же проверь информацию..."
             return SingleMessage(message=result)
         _build_message = sync_to_async(build_lessons_message)
