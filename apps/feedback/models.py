@@ -41,6 +41,10 @@ class Profile(BaseModel):
         self.send_notifications = value
         return self.save()
 
+    def set_days_offset(self, value: int) -> None:
+        self.days_offset = value
+        return self.save()
+
 
 class MessengerModel(BaseModel):
     code = models.CharField(

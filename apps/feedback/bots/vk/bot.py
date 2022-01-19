@@ -4,6 +4,7 @@ from pydantic import NoneIsNotAllowedError
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
 from apps.feedback.bots.commands.get_change_days_offset_info import GetChangeDaysOffsetInfoCommand
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
@@ -97,8 +98,10 @@ class VkBot(BaseBot):
 
         @self.bot.on.message(CommandRule("Получать на", ["!"], 1))
         async def change_days_offset(message: Message, args: 'tuple[str]'):
-            # result =
-            print(args)
+            result = await SetDaysOffsetCommand(
+                account_id=message.peer_id, days_offset=args[0]
+            ).execute()
+            await self._send_response(result, message)
 
     @singledispatchmethod
     async def _send_response(self, response: Any, message: Message) -> None:
