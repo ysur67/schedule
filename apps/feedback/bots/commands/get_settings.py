@@ -20,10 +20,15 @@ class GetSettingsCommand(CommandWithProfile):
         )
 
     async def build_settings_keyboard_layout(self, profile: Profile) -> Iterable[Button]:
-        toggle_notifications_title = "Отключить уведомления" if profile.send_notifications else "Включить уведомления"
+        if profile.send_notifications:
+            toggle_notifications_title = "Отключить уведомления о занятиях"
+        else:
+            toggle_notifications_title = "Включить уведомления о занятиях"
         toggle_notifications_button = Button(title=toggle_notifications_title)
         change_group_button = Button(title="Выбрать группу")
+        change_days_offset_value = Button(title="Изменить кол-во дней на расписание")
         return [
             toggle_notifications_button,
-            change_group_button
+            change_group_button,
+            change_days_offset_value,
         ]

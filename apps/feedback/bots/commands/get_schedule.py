@@ -1,9 +1,9 @@
 from typing import Union
 
-from apps.feedback.bots.commands.utils import build_lesson_message
-from apps.timetables.usecases.lesson import get_lessons_by_group_and_date_range
+from apps.feedback.bots.commands.utils import build_lessons_message, to_message_format
+from apps.timetables.usecases.lesson import get_lessons_dict_by_group_and_date_range
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
-from datetime import date
+from datetime import date, timedelta
 from asgiref.sync import sync_to_async
 
 
@@ -19,10 +19,18 @@ class GetScheduleCommand(CommandWithProfile):
 
     async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
         group = await sync_to_async(self.profile.get_group)()
-        lessons = await sync_to_async(list)(get_lessons_by_group_and_date_range(group, self.date_start))
-        _build_message = sync_to_async(build_lesson_message)
-        result = "========\n".join([await _build_message(item) for item in lessons])
-        if not result:
-            result = "Упс, кажется у тебя нет пар на текущую неделю, "
+        if not group:
+            result = "У тебя не выбрана группа.\n"
+            result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
+            return SingleMessage(message=result)
+        date_start = self.date_start
+        date_end = self.date_end or date_start + timedelta(days=self.profile.days_offset)
+        lessons = await sync_to_async(get_lessons_dict_by_group_and_date_range)(group, date_start, date_end)
+        if not lessons:
+            result = f"Упс, кажется у тебя нет пар c {to_message_format(date_start)} "
+            result += f"по {to_message_format(date_end)}, "
             result += "но все же проверь информацию..."
+            return SingleMessage(message=result)
+        _build_message = sync_to_async(build_lessons_message)
+        result = await _build_message(lessons, group, date_start, date_end)
         return SingleMessage(message=result)

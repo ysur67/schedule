@@ -1,29 +1,46 @@
 from datetime import date, time
 from functools import singledispatch
-from typing import Any
+from time import strftime
+from typing import Any, Dict, List
 from apps.feedback.models import Profile
+from apps.main.utils.date import get_day_of_week
 from apps.timetables.models import Lesson
+from apps.timetables.models.group import Group
 
 
 def build_status_message(profile: Profile) -> str:
     group = profile.get_group()
-    result = f"Группа: {group.title}\n"
-    result += f"Уровень образования: {group.level.title.capitalize()}\n"
+    result = ""
+    if group:
+        result += f"Группа: {group.title}\n"
+        result += f"Уровень образования: {group.level.title.capitalize()}\n"
+    else:
+        result += "Группа: Не выбрана😥\n"
+    result += "\n"
     send_notifications = "✅ Включены" if profile.send_notifications else "❌ Отключены"
-    result += f"Уведомления: {send_notifications}\n"
+    result += f"Уведомления о занятиях: {send_notifications}\n"
+    result += "\n"
+    result += f"Сейчас ты получаешь расписание на {profile.days_offset} дней вперед\n"
+    result += "\n"
     for account in profile.get_accounts_in_messengers():
         messenger = account.get_messenger()
         result += f"Имеется аккаунт в {messenger.title}\n"
     return result
 
 
-def build_lesson_message(lesson: Lesson) -> str:
-    result = f"Дисциплина: {lesson.subject.title}\n"
-    result += f"Дата: {to_message_format(lesson.date)}\n"
-    result += f"Время: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
-    result += f"Преподаватель: {lesson.teacher.name}\n"
-    result += f"Аудитория: {lesson.classroom.title}\n"
-    result += f"Примечание: {lesson.note}\n"
+def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date) -> str:
+    result = f"Расписание {to_message_format(date_start)} - {to_message_format(date_end)}\n"
+    result += f"Группа: {group.title}\n\n"
+    for date in lessons_by_date:
+        result += f"{get_day_of_week(date).capitalize()} {to_message_format(date)}\n"
+        for index, lesson in enumerate(lessons_by_date[date]):
+            result += f"{index + 1}. {lesson.subject.title}\n"
+            result += f"\t🕐 {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
+            result += f"\t👤 {lesson.teacher.name}\n"
+            if lesson.classroom:
+                result += f"\t🏛 {lesson.classroom.title}\n"
+            result += f"\tПримечание: {lesson.note}\n"
+        result += "\n"
     return result
 
 
