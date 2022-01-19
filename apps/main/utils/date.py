@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 
 def get_day_of_week(value: date) -> str:
@@ -18,3 +18,8 @@ def get_day_of_week(value: date) -> str:
     if num == 6:
         return "Воскресенье"
     raise ValueError(f"There is no weekday with index {num}")
+
+
+def date_range(start_date: date, end_date: date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)

@@ -1,9 +1,11 @@
 from datetime import date, time
 from functools import singledispatch
-from typing import Any
+from time import strftime
+from typing import Any, Dict, List
 from apps.feedback.models import Profile
 from apps.main.utils.date import get_day_of_week
 from apps.timetables.models import Lesson
+from apps.timetables.models.group import Group
 
 
 def build_status_message(profile: Profile) -> str:
@@ -20,14 +22,18 @@ def build_status_message(profile: Profile) -> str:
     return result
 
 
-def build_lesson_message(lesson: Lesson) -> str:
-    result = f"{get_day_of_week(lesson.date).upper()}\n"
-    result += f"Дисциплина: {lesson.subject.title}\n"
-    result += f"Дата: {to_message_format(lesson.date)}\n"
-    result += f"Время: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
-    result += f"Преподаватель: {lesson.teacher.name}\n"
-    result += f"Аудитория: {lesson.classroom.title}\n"
-    result += f"Примечание: {lesson.note}\n"
+def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date) -> str:
+    result = f"Расписание {to_message_format(date_start)} - {to_message_format(date_end)}\n"
+    result += f"Группа: {group.title}\n\n"
+    for date in lessons_by_date:
+        result += f"{get_day_of_week(date).capitalize()} {to_message_format(date)}\n"
+        for index, lesson in enumerate(lessons_by_date[date]):
+            result += f"{index + 1}. {lesson.subject.title}\n"
+            result += f"\t🕐: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
+            result += f"\t👤: {lesson.teacher.name}\n"
+            result += f"\t🏛: {lesson.classroom.title}\n"
+            result += f"\tПрим.: {lesson.note}\n"
+            result += "\n"
     return result
 
 
