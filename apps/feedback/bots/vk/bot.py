@@ -82,12 +82,10 @@ class VkBot(BaseBot):
             result = await TurnOnNotificationsCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
 
-
         @self.bot.on.message(text="Отключить уведомления")
-        async def turn_on_notifications(message: Message):
+        async def turn_off_notifications(message: Message):
             result = await TurnOffNotificationsCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
-
 
     @singledispatchmethod
     async def _send_response(self, response: Any, message: Message) -> None:
