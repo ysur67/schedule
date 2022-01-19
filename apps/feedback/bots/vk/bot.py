@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any
+from pydantic import NoneIsNotAllowedError
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
@@ -18,6 +19,7 @@ from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddle
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
+from vkbottle.dispatch.rules.base import CommandRule
 
 
 class VkBot(BaseBot):
@@ -89,9 +91,14 @@ class VkBot(BaseBot):
             await self._send_response(result, message)
 
         @self.bot.on.message(text="Изменить кол-во дней на расписание")
-        async def change_days_offset(message: Message):
+        async def get_change_offset_info(message: Message):
             result = await GetChangeDaysOffsetInfoCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
+
+        @self.bot.on.message(CommandRule("Получать на", ["!"], 1))
+        async def change_days_offset(message: Message, args: 'tuple[str]'):
+            result = None
+            print(args)
 
     @singledispatchmethod
     async def _send_response(self, response: Any, message: Message) -> None:
