@@ -36,7 +36,7 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
             if lesson.classroom:
                 result += f"\t🏛 {lesson.classroom.title}\n"
             result += f"\tПримечание: {lesson.note}\n"
-            result += "\n"
+        result += "\n"
     return result
 
 
