@@ -14,6 +14,8 @@ def build_status_message(profile: Profile) -> str:
     if group:
         result += f"Группа: {group.title}\n"
         result += f"Уровень образования: {group.level.title.capitalize()}\n"
+    else:
+        result += "Группа: Не выбрана😥\n"
     send_notifications = "✅ Включены" if profile.send_notifications else "❌ Отключены"
     result += f"Уведомления о занятиях: {send_notifications}\n"
     for account in profile.get_accounts_in_messengers():
