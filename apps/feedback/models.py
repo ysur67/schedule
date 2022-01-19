@@ -1,6 +1,7 @@
 from typing import Optional
 from django.db import models
 from django.db.models.query import QuerySet
+from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group
 
@@ -13,6 +14,10 @@ class Profile(BaseModel):
         Group, on_delete=models.SET_NULL,
         related_name="profiles", null=True, blank=True,
         verbose_name="Текущий выбор группы"
+    )
+    days_offset = models.PositiveSmallIntegerField(
+        default=DEFAULT_DAYS_OFFSET,
+        verbose_name="Кол-во дней на которое показывать расписание"
     )
 
     class Meta:
@@ -31,6 +36,14 @@ class Profile(BaseModel):
 
     def get_accounts_in_messengers(self) -> QuerySet:
         return self.messenger_accounts.all()
+
+    def toggle_notifications(self, value: bool) -> None:
+        self.send_notifications = value
+        return self.save()
+
+    def set_days_offset(self, value: int) -> None:
+        self.days_offset = value
+        return self.save()
 
 
 class MessengerModel(BaseModel):

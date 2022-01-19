@@ -1,7 +1,10 @@
-from typing import Any, Optional
+from multiprocessing.sharedctypes import Value
+from typing import Any, Optional, Dict, List
 from datetime import time, date, timedelta
 
 from django.db.models.query import QuerySet
+from apps.feedback.const import DEFAULT_DAYS_OFFSET
+from apps.main.utils.date import date_range
 from apps.timetables.models import Lesson
 from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
@@ -73,7 +76,32 @@ def create_lesson(**options) -> Lesson:
     return Lesson.objects.create(**options)
 
 
-def get_lessons_by_group_and_date_range(group: Group, start: date, end: date = None) -> QuerySet[Lesson]:
-    if end is None:
-        end = start + timedelta(days=7)
-    return Lesson.objects.filter(date__range=[start, end], group=group)
+def get_lessons_by_date_and_group(date: date, group: Group) -> QuerySet[Lesson]:
+    return Lesson.objects.filter(date=date, group=group)
+
+
+def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: date = None) -> Dict[date, List[Lesson]]:
+    """Получить `Dict`, вида `[date]: List[Lesson]`, который будет содержать
+    только даты с занятиями.
+
+    Args:
+        group (Group): Группа, для которой надо сформировать ответ
+        start (date): Дата начала
+        end (date, optional): Дата конца, если не указана,
+        то +`apps.feedback.const.DEFAULT_DAYS_OFFSET` дней от начала
+
+    Returns:
+        Dict[date, List[Lesson]]: Результат запроса
+    """
+    if end is not None:
+        if start > end:
+            raise ValueError("Дата начала не может быть меньше конечной даты")
+    else:
+        end = start + timedelta(days=DEFAULT_DAYS_OFFSET)
+    result: Dict[date, List[Lesson]] = {}
+    for single_date in date_range(start, end):
+        qs = get_lessons_by_date_and_group(single_date, group)
+        if qs.exists():
+            result.setdefault(single_date, [])
+            result[single_date] = qs
+    return result

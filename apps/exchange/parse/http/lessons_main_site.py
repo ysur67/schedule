@@ -107,7 +107,9 @@ class LessonsParser(BaseHttpParser):
         return result
 
     def parse_classroom(self, classroom: BeautifulSoup) -> Classroom:
-        title = self.get_title(classroom)
+        title = self.get_title(classroom).strip()
+        if not title:
+            return self.logger.error("У записи не имеется аудитории!")
         result = get_classroom_by_name(title)
         if result:
             self.log_operation(result, "найдена")

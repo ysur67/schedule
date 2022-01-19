@@ -1,8 +1,11 @@
 from datetime import datetime
 from typing import Any
+from pydantic import NoneIsNotAllowedError
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
+from apps.feedback.bots.commands.get_change_days_offset_info import GetChangeDaysOffsetInfoCommand
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
@@ -11,10 +14,13 @@ from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
+from apps.feedback.bots.commands.turn_off_notifications import TurnOffNotificationsCommand
+from apps.feedback.bots.commands.turn_on_notifications import TurnOnNotificationsCommand
 from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
 from apps.feedback.bots.vk.rules.educational_level_rule import EducationalLevelExistRule
 from functools import singledispatchmethod
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
+from vkbottle.dispatch.rules.base import CommandRule
 
 
 class VkBot(BaseBot):
@@ -72,6 +78,28 @@ class VkBot(BaseBot):
             result = await GetScheduleCommand(
                 date_start=datetime.now().date(),
                 account_id=message.peer_id
+            ).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Включить уведомления о занятиях")
+        async def turn_on_notifications(message: Message):
+            result = await TurnOnNotificationsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Отключить уведомления о занятиях")
+        async def turn_off_notifications(message: Message):
+            result = await TurnOffNotificationsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Изменить кол-во дней на расписание")
+        async def get_change_offset_info(message: Message):
+            result = await GetChangeDaysOffsetInfoCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(CommandRule("Получать на", ["!"], 1))
+        async def change_days_offset(message: Message, args: 'tuple[str]'):
+            result = await SetDaysOffsetCommand(
+                account_id=message.peer_id, days_offset=args[0]
             ).execute()
             await self._send_response(result, message)
 
