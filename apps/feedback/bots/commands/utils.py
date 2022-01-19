@@ -29,10 +29,11 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
         result += f"{get_day_of_week(date).capitalize()} {to_message_format(date)}\n"
         for index, lesson in enumerate(lessons_by_date[date]):
             result += f"{index + 1}. {lesson.subject.title}\n"
-            result += f"\t🕐: {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
-            result += f"\t👤: {lesson.teacher.name}\n"
-            result += f"\t🏛: {lesson.classroom.title}\n"
-            result += f"\tПрим.: {lesson.note}\n"
+            result += f"\t🕐 {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
+            result += f"\t👤 {lesson.teacher.name}\n"
+            if lesson.classroom.title:
+                result += f"\t🏛 {lesson.classroom.title}\n"
+            result += f"\tПримечание: {lesson.note}\n"
             result += "\n"
     return result
 
