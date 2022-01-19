@@ -1,6 +1,7 @@
 from typing import Optional
 from django.db import models
 from django.db.models.query import QuerySet
+from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group
 
@@ -13,6 +14,10 @@ class Profile(BaseModel):
         Group, on_delete=models.SET_NULL,
         related_name="profiles", null=True, blank=True,
         verbose_name="Текущий выбор группы"
+    )
+    days_offset = models.PositiveSmallIntegerField(
+        default=DEFAULT_DAYS_OFFSET,
+        verbose_name="Кол-во дней на которое показывать расписание"
     )
 
     class Meta:

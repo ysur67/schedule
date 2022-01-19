@@ -3,6 +3,7 @@ from typing import Any, Optional, Dict, List
 from datetime import time, date, timedelta
 
 from django.db.models.query import QuerySet
+from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.main.utils.date import date_range
 from apps.timetables.models import Lesson
 from apps.timetables.models.classroom import Classroom
@@ -87,7 +88,7 @@ def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: dat
         group (Group): Группа, для которой надо сформировать ответ
         start (date): Дата начала
         end (date, optional): Дата конца, если не указана,
-        то +7 дней от начала
+        то +`apps.feedback.const.DEFAULT_DAYS_OFFSET` дней от начала
 
     Returns:
         Dict[date, List[Lesson]]: Результат запроса
@@ -96,7 +97,7 @@ def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: dat
         if start > end:
             raise ValueError("Дата начала не может быть меньше конечной даты")
     else:
-        end = start + timedelta(days=7)
+        end = start + timedelta(days=DEFAULT_DAYS_OFFSET)
     result: Dict[date, List[Lesson]] = {}
     for single_date in date_range(start, end):
         qs = get_lessons_by_date_and_group(single_date, group)

@@ -24,7 +24,7 @@ class GetScheduleCommand(CommandWithProfile):
             result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
             return SingleMessage(message=result)
         date_start = self.date_start
-        date_end = self.date_end or date_start + timedelta(days=7)
+        date_end = self.date_end or date_start + timedelta(days=self.profile.days_offset)
         lessons = await sync_to_async(get_lessons_dict_by_group_and_date_range)(group, date_start, date_end)
         if not lessons:
             result = "Упс, кажется у тебя нет пар на текущую неделю, "
