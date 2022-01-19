@@ -19,15 +19,15 @@ class SetDaysOffsetCommand(CommandWithProfile):
             offset = int(self.new_days_offset)
         except ValueError:
             offset = None
-        if offset > MAX_DAYS_OFFSET:
-            result = "Ты ввел больше дней, чем позволяет сайт с расписанием\n"
+        if not offset:
+            result = "Ты ввел очень странный формат кол-ва дней, я его не понял...\n"
             result += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
             return SingleMessage(
                 message=result,
                 keyboard=keyboard_data
             )
-        if not offset:
-            result = "Ты ввел очень странный формат кол-ва дней, я его не понял...\n"
+        if offset > MAX_DAYS_OFFSET:
+            result = "Ты ввел больше дней, чем позволяет сайт с расписанием\n"
             result += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
             return SingleMessage(
                 message=result,
