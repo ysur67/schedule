@@ -16,8 +16,12 @@ def build_status_message(profile: Profile) -> str:
         result += f"Уровень образования: {group.level.title.capitalize()}\n"
     else:
         result += "Группа: Не выбрана😥\n"
+    result += "\n"
     send_notifications = "✅ Включены" if profile.send_notifications else "❌ Отключены"
     result += f"Уведомления о занятиях: {send_notifications}\n"
+    result += "\n"
+    result += f"Сейчас ты получаешь расписание на {profile.days_offset} дней вперед\n"
+    result += "\n"
     for account in profile.get_accounts_in_messengers():
         messenger = account.get_messenger()
         result += f"Имеется аккаунт в {messenger.title}\n"
