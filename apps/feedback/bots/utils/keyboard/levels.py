@@ -3,7 +3,7 @@ from typing import List
 from django.db.models.query import QuerySet
 from .base import BaseKeyboard
 from apps.timetables.models import EducationalLevel
-from vkbottle import Keyboard, Text
+from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 
 class EducationalLevelsKeyboard(BaseKeyboard):
@@ -15,4 +15,7 @@ class EducationalLevelsKeyboard(BaseKeyboard):
             result.add(Text(value.title))
             if not self._is_last(index, self.data):
                 result.row()
+        if self.has_cancel_button:
+            result.row()
+            result.add(Text("Главное меню"), KeyboardButtonColor.PRIMARY)
         return result.get_json()
