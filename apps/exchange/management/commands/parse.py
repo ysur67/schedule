@@ -11,7 +11,7 @@ class Command(BaseCommand):
             "ucstep": "1",
             "exam": "0",
             "datafrom": "01.01.2022",
-            "dataend": "31.01.2022",
+            "dataend": "01.08.2022",
             "formo": "2",
             "formob": "1",
             "prdis": "0"
