@@ -3,6 +3,7 @@ from typing import Any
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.change_days_offset import GetChangeDaysOffsetInfoCommand
 from apps.feedback.bots.commands.echo import HelloCommand
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
@@ -85,6 +86,11 @@ class VkBot(BaseBot):
         @self.bot.on.message(text="Отключить уведомления о занятиях")
         async def turn_off_notifications(message: Message):
             result = await TurnOffNotificationsCommand(account_id=message.peer_id).execute()
+            await self._send_response(result, message)
+
+        @self.bot.on.message(text="Изменить кол-во дней на расписание")
+        async def change_days_offset(message: Message):
+            result = await GetChangeDaysOffsetInfoCommand(account_id=message.peer_id).execute()
             await self._send_response(result, message)
 
     @singledispatchmethod
