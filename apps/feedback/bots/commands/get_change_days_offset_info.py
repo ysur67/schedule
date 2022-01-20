@@ -27,7 +27,7 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
     async def build_settings_keyboard_layout(self, profile: Profile) -> Iterable[Button]:
         result = []
         if not profile.days_offset == DEFAULT_DAYS_OFFSET:
-            result.append(Button(title=f"Получать на {DEFAULT_DAYS_OFFSET}"))
+            result.append(Button(title=f"!Получать на {DEFAULT_DAYS_OFFSET}"))
         result.append(Button(title="!Получать на 14"))
         for index in range(6):
             result.append(Button(title=f"!Получать на {index + 1}"))

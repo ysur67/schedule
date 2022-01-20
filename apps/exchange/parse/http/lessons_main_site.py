@@ -27,15 +27,14 @@ class LessonsParser(BaseHttpParser):
         self.logger.info("Поля запроса: %s", self.payload_data)
 
     def parse(self):
-        date_titles = self.soup.find_all("h4")
+        date_titles: List[BeautifulSoup] = self.soup.find_all("h4")
         for title in date_titles:
-            title: BeautifulSoup
             parent_center = title.parent
-            current_date = get_date_from_string(title.get_text())
             table = parent_center.next_sibling
             if table.name != "table":
                 self.logger.error("Не была найдена таблица")
                 continue
+            current_date = get_date_from_string(title.get_text())
             self.parse_table(table, current_date)
 
     def parse_table(self, table: BeautifulSoup, current_date: date) -> None:
@@ -107,7 +106,7 @@ class LessonsParser(BaseHttpParser):
         return result
 
     def parse_classroom(self, classroom: BeautifulSoup) -> Classroom:
-        title = self.get_title(classroom).strip()
+        title = self.get_title(classroom, raise_exception=False)
         if not title:
             return self.logger.error("У записи не имеется аудитории!")
         result = get_classroom_by_name(title)

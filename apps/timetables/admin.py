@@ -25,4 +25,4 @@ class ClassroomAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "date", "time_start", "time_end")
+    list_display = ("id", "title", "date", "group", "time_start", "time_end")

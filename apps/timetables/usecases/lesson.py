@@ -80,6 +80,10 @@ def get_lessons_by_date_and_group(date: date, group: Group) -> QuerySet[Lesson]:
     return Lesson.objects.filter(date=date, group=group)
 
 
+def get_lessons_by_group_and_date_range(group: Group, start: date, end: date) -> QuerySet[Lesson]:
+    return Lesson.objects.filter(date__range=[start, end], group=group)
+
+
 def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: date = None) -> Dict[date, List[Lesson]]:
     """Получить `Dict`, вида `[date]: List[Lesson]`, который будет содержать
     только даты с занятиями.
@@ -99,6 +103,8 @@ def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: dat
     else:
         end = start + timedelta(days=DEFAULT_DAYS_OFFSET)
     result: Dict[date, List[Lesson]] = {}
+    if not get_lessons_by_group_and_date_range(group, start, end):
+        return {}
     for single_date in date_range(start, end):
         qs = get_lessons_by_date_and_group(single_date, group)
         if qs.exists():
