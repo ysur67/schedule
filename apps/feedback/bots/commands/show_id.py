@@ -1,7 +1,4 @@
 from typing import Union
-
-from vkbottle.tools.dev.mini_types.bot import message
-from apps.feedback.bots.utils.const import Messengers
 from .base import BaseCommand, MultipleMessages, SingleMessage
 
 

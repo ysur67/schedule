@@ -26,9 +26,11 @@ class GetSettingsCommand(CommandWithProfile):
             toggle_notifications_title = "Включить уведомления о занятиях"
         toggle_notifications_button = Button(title=toggle_notifications_title)
         change_group_button = Button(title="Выбрать группу")
-        change_days_offset_value = Button(title="Изменить кол-во дней на расписание")
+        change_days_offset_value_button = Button(title="Изменить кол-во дней на расписание")
+        show_my_id_button = Button(title="Покажи мой ID")
         return [
             toggle_notifications_button,
             change_group_button,
-            change_days_offset_value,
+            change_days_offset_value_button,
+            show_my_id_button
         ]
