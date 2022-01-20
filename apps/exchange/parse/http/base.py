@@ -52,7 +52,7 @@ class BaseHttpParser(BaseParser):
             необходимо поднимать исключение, если текста внутри блока нет.
             Defaults to True.
         """
-        result = item.get_text()
+        result = item.get_text().strip()
         if result:
             return result
         if raise_exception:

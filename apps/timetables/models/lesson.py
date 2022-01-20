@@ -18,7 +18,7 @@ class Lesson(BaseModel):
         Teacher, on_delete=models.CASCADE, related_name="lessons",
         verbose_name="Преподаватель"
     )
-    note = models.TextField(verbose_name="Примечание")
+    note = models.TextField(verbose_name="Примечание", null=True)
     classroom = models.ForeignKey(
         Classroom, on_delete=models.SET_NULL, related_name="lessons",
         null=True, blank=True,
