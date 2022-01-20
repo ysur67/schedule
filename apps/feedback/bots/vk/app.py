@@ -5,7 +5,6 @@ from apps.feedback.bots.vk.base import BaseVkBot
 import apps.feedback.bots.vk.endpoints
 
 
-
 def has_init_endpoints_method(module: ModuleType) -> bool:
     return hasattr(module, "init_endpoints") and callable(module.init_endpoints)
 
