@@ -13,7 +13,7 @@ class Command(BaseCommand):
             "datafrom": "01.01.2022",
             "dataend": "01.08.2022",
             "formo": "2",
-            "formob": "1",
+            "formob": "0",
             "prdis": "0"
         }
         parser = LessonsParser.build_parser(
