@@ -1,9 +1,7 @@
-from datetime import date, time
-from functools import singledispatch
-from time import strftime
+from datetime import date
 from typing import Any, Dict, List
 from apps.feedback.models import Profile
-from apps.main.utils.date import get_day_of_week
+from apps.main.utils.date import get_day_of_week, to_message_format
 from apps.timetables.models import Lesson
 from apps.timetables.models.group import Group
 
@@ -42,16 +40,3 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
             result += f"\tПримечание: {lesson.note}\n"
         result += "\n"
     return result
-
-
-@singledispatch
-def to_message_format(data: Any) -> str:
-    raise NotImplementedError(f"There is no approach for type {type(data)}")
-
-@to_message_format.register(date)
-def _(data: date) -> str:
-    return data.strftime('%d.%m.%Y')
-
-@to_message_format.register(time)
-def _(data: time) -> str:
-    return data.strftime("%H:%M")
