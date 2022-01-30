@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 from vkbottle.bot import Bot, Message
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage

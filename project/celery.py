@@ -30,6 +30,6 @@ app.conf.beat_schedule = {
     },
     'parse-lessons-info-every-hour': {
         'task': 'apps.exchange.tasks.lessons.parse_lessons_info',
-        'schedule': crontab(minute="*/1"),
+        'schedule': crontab(minute="*/60"),
     },
 }
