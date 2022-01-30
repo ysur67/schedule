@@ -1,4 +1,6 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, time
+from typing import Any
+from functools import singledispatch
 
 
 def get_day_of_week(value: date) -> str:
@@ -23,3 +25,15 @@ def get_day_of_week(value: date) -> str:
 def date_range(start_date: date, end_date: date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
+
+@singledispatch
+def to_message_format(data: Any) -> str:
+    raise NotImplementedError(f"There is no approach for type {type(data)}")
+
+@to_message_format.register(date)
+def _(data: date) -> str:
+    return data.strftime('%d.%m.%Y')
+
+@to_message_format.register(time)
+def _(data: time) -> str:
+    return data.strftime("%H:%M")

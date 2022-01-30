@@ -1,6 +1,7 @@
 from typing import Union
 
-from apps.feedback.bots.commands.utils import build_lessons_message, to_message_format
+from apps.feedback.bots.commands.utils import build_lessons_message
+from apps.main.utils.date import to_message_format
 from apps.timetables.usecases.lesson import get_lessons_dict_by_group_and_date_range
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
 from datetime import date, timedelta

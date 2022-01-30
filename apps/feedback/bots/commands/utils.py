@@ -1,9 +1,7 @@
-from datetime import date, time
-from functools import singledispatch
-from time import strftime
+from datetime import date
 from typing import Any, Dict, List
 from apps.feedback.models import Profile
-from apps.main.utils.date import get_day_of_week
+from apps.main.utils.date import get_day_of_week, to_message_format
 from apps.timetables.models import Lesson
 from apps.timetables.models.group import Group
 
@@ -28,8 +26,11 @@ def build_status_message(profile: Profile) -> str:
     return result
 
 
-def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date) -> str:
-    result = f"Расписание {to_message_format(date_start)} - {to_message_format(date_end)}\n"
+def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date = None) -> str:
+    result = f"Расписание {to_message_format(date_start)}"
+    if date_end is not None:
+        result += f" - {to_message_format(date_end)}"
+    result += "\n"
     result += f"Группа: {group.title}\n\n"
     for date in lessons_by_date:
         result += f"{get_day_of_week(date).capitalize()} {to_message_format(date)}\n"
@@ -44,14 +45,10 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
     return result
 
 
-@singledispatch
-def to_message_format(data: Any) -> str:
-    raise NotImplementedError(f"There is no approach for type {type(data)}")
-
-@to_message_format.register(date)
-def _(data: date) -> str:
-    return data.strftime('%d.%m.%Y')
-
-@to_message_format.register(time)
-def _(data: time) -> str:
-    return data.strftime("%H:%M")
+def get_note_message() -> str:
+    note_message = "Привет!\n"
+    note_message += "Ты попросил отправлять тебе уведомления о занятиях "
+    note_message += "в день их проведения.\n"
+    note_message += "Поэтому, ниже отправляю тебе твои занятия на сегодня.\n"
+    note_message += "Ты всегда можешь отключить уведомления в настройках"
+    return note_message
