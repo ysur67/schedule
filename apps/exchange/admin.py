@@ -1,3 +1,7 @@
 from django.contrib import admin
+from apps.exchange.models import ExchangeSettings
 
-# Register your models here.
+
+@admin.register(ExchangeSettings)
+class ExchangeSettingsAdmin(admin.ModelAdmin):
+    pass

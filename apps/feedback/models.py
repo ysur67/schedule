@@ -19,6 +19,10 @@ class Profile(BaseModel):
         default=DEFAULT_DAYS_OFFSET,
         verbose_name="Кол-во дней на которое показывать расписание"
     )
+    send_notifications_on_lesson_day = models.BooleanField(
+        verbose_name="Отправлять уведомления о предстоящих занятиях в день занятий?",
+        default=True,
+    )
 
     class Meta:
         verbose_name = "Пользователь"

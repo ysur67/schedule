@@ -19,7 +19,7 @@ class SetDaysOffsetCommand(CommandWithProfile):
             offset = int(self.new_days_offset)
         except ValueError:
             offset = None
-        if not offset:
+        if not offset or offset < 1:
             result = "Ты ввел очень странный формат кол-ва дней, я его не понял...\n"
             result += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
             return SingleMessage(
