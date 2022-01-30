@@ -32,4 +32,8 @@ app.conf.beat_schedule = {
         'task': 'apps.exchange.tasks.lessons.parse_lessons_info',
         'schedule': crontab(minute="*/60"),
     },
+    'send-lessons-notifications-everyday': {
+        'task': 'apps.feedback.tasks.lessons.send_notifications_in_lesson_day',
+        'schedule': crontab(hour="10", minute="0"),
+    },
 }
