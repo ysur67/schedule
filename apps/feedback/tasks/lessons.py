@@ -1,4 +1,6 @@
 import asyncio
+from typing import Union
+from apps.feedback.bots.base import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.commands.utils import build_lessons_message
 from apps.feedback.bots.vk.bot import VkBot
@@ -8,19 +10,19 @@ from apps.timetables.usecases.lesson import get_lessons_by_profile_and_date
 from project.celery import app as celery_app
 from datetime import date, datetime
 from apps.main.usecases import get_settings
-from asgiref.sync import async_to_sync
 
 
 @celery_app.task()
 def send_notifications_in_lesson_day() -> None:
-    # date_ = date.today()
-    date_ = datetime.strptime("01.02.2022", "%d.%m.%Y").date()
+    date_ = date.today()
     groups = get_groups_that_have_lessons_in_date(
         date_
     ).prefetch_related("profiles", "lessons")
+    if not groups:
+        return
     settings = get_settings()
     bot = VkBot(settings.vk_token)
-    for profile in Profile.objects.filter(current_group__in=groups):
+    for profile in Profile.objects.filter(current_group__in=groups).prefetch_related("messenger_accounts"):
         lessons = get_lessons_by_profile_and_date(profile, date_)
         note_message = "Привет!\n"
         note_message += "Ты попросил отправлять тебе уведомления о занятиях "
