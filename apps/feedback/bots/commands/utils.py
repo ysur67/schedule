@@ -26,8 +26,11 @@ def build_status_message(profile: Profile) -> str:
     return result
 
 
-def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date) -> str:
-    result = f"Расписание {to_message_format(date_start)} - {to_message_format(date_end)}\n"
+def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Group, date_start: date, date_end: date = None) -> str:
+    result = f"Расписание {to_message_format(date_start)}"
+    if date_end is not None:
+        result += f" - {to_message_format(date_end)}"
+    result += "\n"
     result += f"Группа: {group.title}\n\n"
     for date in lessons_by_date:
         result += f"{get_day_of_week(date).capitalize()} {to_message_format(date)}\n"

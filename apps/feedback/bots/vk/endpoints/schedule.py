@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from apps.feedback.bots.commands.educational_levels import EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand

@@ -14,7 +14,8 @@ from apps.main.usecases import get_settings
 
 @celery_app.task()
 def send_notifications_in_lesson_day() -> None:
-    date_ = date.today()
+    # date_ = date.today()
+    date_ = datetime.strptime("01.02.2022", "%d.%m.%Y")
     groups = get_groups_that_have_lessons_in_date(
         date_
     ).prefetch_related("profiles", "lessons")
@@ -31,6 +32,6 @@ def send_notifications_in_lesson_day() -> None:
         note_message += "Ты всегда можешь отключить уведомления в настройках"
         lessons_message = build_lessons_message({
             date_: lessons,
-        }, profile.current_group, date_, date_)
+        }, profile.current_group, date_)
         account = profile.get_accounts_in_messengers().first()
         asyncio.get_event_loop().run_until_complete(bot.send_message(MultipleMessages([SingleMessage(note_message), SingleMessage(lessons_message)]), int(account.account_id)))
