@@ -2,7 +2,7 @@ import asyncio
 from typing import Union
 from apps.feedback.bots.base import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
-from apps.feedback.bots.commands.utils import build_lessons_message
+from apps.feedback.bots.commands.utils import build_lessons_message, get_note_message
 from apps.feedback.bots.vk.bot import VkBot
 from apps.feedback.models import Profile
 from apps.timetables.usecases.group import get_groups_that_have_lessons_in_date
@@ -14,8 +14,7 @@ from apps.main.usecases import get_settings
 
 @celery_app.task()
 def send_notifications_in_lesson_day() -> None:
-    # date_ = date.today()
-    date_ = datetime.strptime("01.02.2022", "%d.%m.%Y")
+    date_ = date.today()
     groups = get_groups_that_have_lessons_in_date(
         date_
     ).prefetch_related("profiles", "lessons")
@@ -25,13 +24,16 @@ def send_notifications_in_lesson_day() -> None:
     bot = VkBot(settings.vk_token)
     for profile in Profile.objects.filter(current_group__in=groups).prefetch_related("messenger_accounts"):
         lessons = get_lessons_by_profile_and_date(profile, date_)
-        note_message = "Привет!\n"
-        note_message += "Ты попросил отправлять тебе уведомления о занятиях "
-        note_message += "в день их проведения.\n"
-        note_message += "Поэтому, ниже отправляю тебе твои занятия на сегодня.\n"
-        note_message += "Ты всегда можешь отключить уведомления в настройках"
-        lessons_message = build_lessons_message({
-            date_: lessons,
-        }, profile.current_group, date_)
+        note_message = get_note_message()
+        lessons_message = build_lessons_message(
+            lessons_by_date={date_: lessons},
+            group=profile.get_group(),
+            date_start=date_
+        )
         account = profile.get_accounts_in_messengers().first()
-        asyncio.get_event_loop().run_until_complete(bot.send_message(MultipleMessages([SingleMessage(note_message), SingleMessage(lessons_message)]), int(account.account_id)))
+        asyncio.get_event_loop().run_until_complete(
+            bot.send_message(
+                MultipleMessages([SingleMessage(note_message), SingleMessage(lessons_message)]),
+                int(account.account_id)
+            )
+        )

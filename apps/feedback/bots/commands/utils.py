@@ -43,3 +43,12 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
             result += f"\tПримечание: {lesson.note}\n"
         result += "\n"
     return result
+
+
+def get_note_message() -> str:
+    note_message = "Привет!\n"
+    note_message += "Ты попросил отправлять тебе уведомления о занятиях "
+    note_message += "в день их проведения.\n"
+    note_message += "Поэтому, ниже отправляю тебе твои занятия на сегодня.\n"
+    note_message += "Ты всегда можешь отключить уведомления в настройках"
+    return note_message
