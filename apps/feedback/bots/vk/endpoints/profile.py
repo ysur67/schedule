@@ -57,11 +57,19 @@ def init_endpoints(app: BaseVkBot):
     )
     async def get_change_offset_info(message: Message):
         result = await GetChangeDaysOffsetInfoCommand(account_id=message.peer_id).execute()
+        await app.bot.state_dispenser.set(
+            message.peer_id,
+            state=UserStates.CHANGE_DAYS_OFFSET_STATE
+        )
         await app.send_response(result, message)
 
-    @app.bot.on.message(CommandRule("Получать на", ["!"], 1))
+    @app.bot.on.message(
+        CommandRule("Получать на", ["!"], 1),
+        state=UserStates.CHANGE_DAYS_OFFSET_STATE
+    )
     async def change_days_offset(message: Message, args: 'tuple[str]'):
         result = await SetDaysOffsetCommand(
             account_id=message.peer_id, days_offset=args[0]
         ).execute()
+        await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(result, message)
