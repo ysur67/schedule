@@ -13,7 +13,7 @@ from vkbottle.bot import Message
 
 
 def init_endpoints(app: BaseVkBot):
-    @app.bot.on.message(GroupExistRule(), state=UserStates.CHOOSING_GROUP_STATE)
+    @app.bot.on.message(GroupExistRule(), state=UserStates.CHOOSE_GROUP_STATE)
     async def save_current_group(message: Message):
         result = await SaveCurrentGroupCommand(
             group=message.text,
@@ -30,19 +30,31 @@ def init_endpoints(app: BaseVkBot):
     @app.bot.on.message(text="Настройки")
     async def get_settings(message: Message):
         result = await GetSettingsCommand(account_id=message.peer_id).execute()
+        await app.bot.state_dispenser.set(message.peer_id, UserStates.CHANGE_SETTINGS_STATE)
         await app.send_response(result, message)
 
-    @app.bot.on.message(text="Включить уведомления о занятиях")
+    @app.bot.on.message(
+        text="Включить уведомления о занятиях",
+        state=UserStates.CHANGE_SETTINGS_STATE
+    )
     async def turn_on_notifications(message: Message):
         result = await TurnOnNotificationsCommand(account_id=message.peer_id).execute()
+        await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(result, message)
 
-    @app.bot.on.message(text="Отключить уведомления о занятиях")
+    @app.bot.on.message(
+        text="Отключить уведомления о занятиях",
+        state=UserStates.CHANGE_SETTINGS_STATE
+    )
     async def turn_off_notifications(message: Message):
         result = await TurnOffNotificationsCommand(account_id=message.peer_id).execute()
+        await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(result, message)
 
-    @app.bot.on.message(text="Изменить кол-во дней на расписание")
+    @app.bot.on.message(
+        text="Изменить кол-во дней на расписание",
+        state=UserStates.CHANGE_SETTINGS_STATE
+    )
     async def get_change_offset_info(message: Message):
         result = await GetChangeDaysOffsetInfoCommand(account_id=message.peer_id).execute()
         await app.send_response(result, message)

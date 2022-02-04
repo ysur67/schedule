@@ -2,4 +2,5 @@ from vkbottle import BaseStateGroup
 
 
 class UserStates(BaseStateGroup):
-    CHOOSING_GROUP_STATE = 0
+    CHOOSE_GROUP_STATE = 0
+    CHANGE_SETTINGS_STATE = 1
