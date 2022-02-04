@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import environ
+import redis
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,6 +84,8 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': env.db(),
 }
+
+REDIS_INSTANCE = redis.from_url(env("REDIS_URL"))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
