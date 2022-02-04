@@ -13,7 +13,7 @@ def init_endpoints(app: BaseVkBot):
     @app.bot.on.message(text=["Уровень", "Выбор группы", "Выбрать группу"])
     async def get_educational_levels(message: Message):
         result = await EducationalLevelsCommand().execute()
-        await app.bot.state_dispenser.set(message.peer_id, UserStates.CHOOSING_GROUP_STATE)
+        await app.bot.state_dispenser.set(message.peer_id, UserStates.CHOOSE_GROUP_STATE)
         await app.send_response(result, message)
 
     @app.bot.on.message(EducationalLevelExistRule())
