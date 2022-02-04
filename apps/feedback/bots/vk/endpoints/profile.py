@@ -7,17 +7,19 @@ from apps.feedback.bots.commands.turn_off_notifications import TurnOffNotificati
 from apps.feedback.bots.commands.turn_on_notifications import TurnOnNotificationsCommand
 from apps.feedback.bots.vk.base import BaseVkBot
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
+from apps.feedback.bots.vk.states import UserStates
 from vkbottle.dispatch.rules.base import CommandRule
 from vkbottle.bot import Message
 
 
 def init_endpoints(app: BaseVkBot):
-    @app.bot.on.message(GroupExistRule())
+    @app.bot.on.message(GroupExistRule(), state=UserStates.CHOOSING_GROUP_STATE)
     async def save_current_group(message: Message):
         result = await SaveCurrentGroupCommand(
             group=message.text,
             account_id=message.peer_id
         ).execute()
+        await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(result, message)
 
     @app.bot.on.message(text="Статус")
