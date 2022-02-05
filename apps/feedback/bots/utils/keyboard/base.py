@@ -13,7 +13,7 @@ class BaseKeyboard(ABC):
 
     @abstractmethod
     def to_vk_api(self) -> Union[str, List[str]]:
-        return self.result.get_json()
+        pass
 
     def _is_last(self, index: int, data: Iterable) -> bool:
         if not isinstance(data, Iterable):

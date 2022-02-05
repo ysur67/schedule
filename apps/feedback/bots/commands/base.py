@@ -5,6 +5,7 @@ from typing import Any, Dict, Iterable, Optional, Union
 from asgiref.sync import sync_to_async
 
 from apps.feedback.bots.utils.const import Messengers
+from apps.feedback.bots.utils.keyboard.base import BaseKeyboard
 from apps.feedback.usecases.messenger import get_messenger_by_code
 from apps.feedback.usecases.profile import \
     get_profile_by_messenger_and_account_id
@@ -13,7 +14,7 @@ from apps.feedback.usecases.profile import \
 @dataclass
 class SingleMessage:
     message: str
-    keyboard: Optional[Any] = None
+    keyboard: Optional[BaseKeyboard]= None
 
     def to_dict(self) -> Dict:
         return {
