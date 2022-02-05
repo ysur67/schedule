@@ -1,4 +1,5 @@
 from typing import Optional
+
 from apps.timetables.models import Classroom
 
 

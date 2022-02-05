@@ -1,8 +1,10 @@
+from datetime import date, time, timedelta
+from functools import singledispatch
 from multiprocessing.sharedctypes import Value
-from typing import Any, Optional, Dict, List
-from datetime import time, date, timedelta
+from typing import Any, Dict, List, Optional
 
 from django.db.models.query import QuerySet
+
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile
 from apps.main.utils.date import date_range
@@ -11,8 +13,6 @@ from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
 from apps.timetables.models.teacher import Teacher
-from functools import singledispatch
-
 from apps.timetables.usecases.group import get_groups_that_have_lessons_in_date
 
 

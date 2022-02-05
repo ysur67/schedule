@@ -1,5 +1,6 @@
 from datetime import date, datetime, time
 from typing import Tuple
+
 from bs4 import BeautifulSoup
 
 

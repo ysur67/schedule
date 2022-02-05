@@ -1,6 +1,8 @@
-from django.core.management import BaseCommand
-from apps.timetables.models import EducationalLevel
 from typing import Any, Optional
+
+from django.core.management import BaseCommand
+
+from apps.timetables.models import EducationalLevel
 
 
 class Command(BaseCommand):

@@ -1,8 +1,12 @@
 from typing import Union
-from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
-from apps.timetables.usecases.educational_level import get_all_educational_levels
-from .base import BaseCommand, MultipleMessages, SingleMessage
+
 from asgiref.sync import sync_to_async
+
+from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
+from apps.timetables.usecases.educational_level import \
+    get_all_educational_levels
+
+from .base import BaseCommand, MultipleMessages, SingleMessage
 
 
 class EducationalLevelsCommand(BaseCommand):

@@ -1,9 +1,12 @@
 from typing import Union
+
+from asgiref.sync import sync_to_async
+
 from apps.feedback.bots.utils.const import MAIN_MENU_KEYBOARD_LAYOUT
 from apps.feedback.bots.utils.keyboard.main_menu import MainMenuKeyboard
 from apps.feedback.const import MAX_DAYS_OFFSET
+
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
-from asgiref.sync import sync_to_async
 
 
 class SetDaysOffsetCommand(CommandWithProfile):

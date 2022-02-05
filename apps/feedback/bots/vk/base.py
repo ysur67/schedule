@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from vkbottle.bot import Message, Bot
+
+from vkbottle.bot import Bot, Message
 
 
 class BaseVkBot(ABC):

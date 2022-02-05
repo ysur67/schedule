@@ -1,8 +1,11 @@
 from typing import Union
+
+from asgiref.sync import sync_to_async
 from vkbottle.bot import Message
 from vkbottle.dispatch.rules import ABCRule
-from asgiref.sync import sync_to_async
-from apps.timetables.usecases.educational_level import get_educational_level_by_title
+
+from apps.timetables.usecases.educational_level import \
+    get_educational_level_by_title
 
 
 class EducationalLevelExistRule(ABCRule[Message]):

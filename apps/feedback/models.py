@@ -1,6 +1,8 @@
 from typing import Optional
+
 from django.db import models
 from django.db.models.query import QuerySet
+
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.main.models.mixins import BaseModel
 from apps.timetables.models import Group

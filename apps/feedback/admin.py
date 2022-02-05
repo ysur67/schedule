@@ -1,5 +1,6 @@
 from django.contrib import admin
-from apps.feedback.models import Profile, MessengerAccount,  MessengerModel
+
+from apps.feedback.models import MessengerAccount, MessengerModel, Profile
 
 
 @admin.register(MessengerModel)

@@ -1,6 +1,8 @@
 from typing import List, Union
-from .base import BaseKeyboard
+
 from vkbottle import Keyboard, Text
+
+from .base import BaseKeyboard
 
 
 class MainMenuKeyboard(BaseKeyboard):

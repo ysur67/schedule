@@ -1,5 +1,7 @@
 from typing import Any, Optional
+
 from django.core.management.base import BaseCommand
+
 from apps.exchange.parse import LessonsParser
 
 

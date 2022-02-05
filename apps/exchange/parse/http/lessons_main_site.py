@@ -1,20 +1,27 @@
 from datetime import date, datetime, time
 from typing import List, Optional
-from apps.exchange.parse.utils import get_date_from_string, get_time_range_from_string
+
+from bs4 import BeautifulSoup
+
+from apps.exchange.parse.utils import (get_date_from_string,
+                                       get_time_range_from_string)
 from apps.main.models.mixins import LoggingMixin
+from apps.timetables.models import Lesson
 from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
 from apps.timetables.models.teacher import Teacher
-from apps.timetables.usecases.classroom import create_classroom, get_classroom_by_name
-
+from apps.timetables.usecases.classroom import (create_classroom,
+                                                get_classroom_by_name)
 from apps.timetables.usecases.group import create_group, get_group_by_title
-from apps.timetables.usecases.lesson import AllFieldsParam, create_lesson, get_lesson_by_params
-from apps.timetables.usecases.subject import create_subject, get_subject_by_title
-from apps.timetables.usecases.teacher import create_teacher, get_teacher_by_name
+from apps.timetables.usecases.lesson import (AllFieldsParam, create_lesson,
+                                             get_lesson_by_params)
+from apps.timetables.usecases.subject import (create_subject,
+                                              get_subject_by_title)
+from apps.timetables.usecases.teacher import (create_teacher,
+                                              get_teacher_by_name)
+
 from .base import BaseHttpParser
-from bs4 import BeautifulSoup
-from apps.timetables.models import Lesson
 
 
 class LessonsParser(BaseHttpParser):

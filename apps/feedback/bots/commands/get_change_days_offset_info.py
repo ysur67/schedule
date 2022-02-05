@@ -1,8 +1,10 @@
 from typing import Iterable, Union
+
 from apps.feedback.bots.utils.keyboard.base import Button
 from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile
+
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
 
 
