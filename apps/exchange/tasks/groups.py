@@ -1,8 +1,9 @@
-from apps.exchange.usecases.exchange_settings import get_exchange_settings
-from project.celery import app as celery_app
+from celery.beat import crontab
+
 from apps.exchange.parse.http import RequestType
 from apps.exchange.parse.http.groups import AllGroupsParser
-from celery.beat import crontab
+from apps.exchange.usecases.exchange_settings import get_exchange_settings
+from project.celery import app as celery_app
 
 
 @celery_app.task()

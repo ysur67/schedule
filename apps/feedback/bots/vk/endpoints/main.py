@@ -1,7 +1,7 @@
-from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from vkbottle.bot import Message
-from apps.feedback.bots.commands.show_id import ShowIDCommand
 
+from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
+from apps.feedback.bots.commands.show_id import ShowIDCommand
 from apps.feedback.bots.vk.base import BaseVkBot
 
 

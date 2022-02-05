@@ -1,5 +1,6 @@
-from django.core.management import BaseCommand
 from typing import Any, Optional
+
+from django.core.management import BaseCommand
 
 from apps.feedback.tasks.lessons import send_notifications_in_lesson_day
 

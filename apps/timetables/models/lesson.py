@@ -1,6 +1,7 @@
 from django.db import models
+
 from apps.main.models import BaseModel
-from apps.timetables.models import Group, Teacher, Classroom, Subject
+from apps.timetables.models import Classroom, Group, Subject, Teacher
 
 
 class Lesson(BaseModel):

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from apps.timetables.models import Group, Teacher, EducationalLevel, Classroom, Lesson
+
+from apps.timetables.models import (Classroom, EducationalLevel, Group, Lesson,
+                                    Teacher)
 
 
 @admin.register(Group)

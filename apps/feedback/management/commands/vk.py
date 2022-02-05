@@ -1,4 +1,5 @@
 from typing import Any, Optional
+
 from django.core.management import BaseCommand
 
 from apps.feedback.bots.vk.bot import VkBot

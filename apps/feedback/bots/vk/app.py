@@ -1,8 +1,9 @@
 from importlib import import_module
-from types import ModuleType
 from pkgutil import iter_modules
-from apps.feedback.bots.vk.base import BaseVkBot
+from types import ModuleType
+
 import apps.feedback.bots.vk.endpoints
+from apps.feedback.bots.vk.base import BaseVkBot
 
 
 def has_init_endpoints_method(module: ModuleType) -> bool:

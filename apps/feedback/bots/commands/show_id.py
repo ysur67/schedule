@@ -1,4 +1,5 @@
 from typing import Union
+
 from .base import BaseCommand, MultipleMessages, SingleMessage
 
 

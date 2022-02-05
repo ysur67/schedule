@@ -1,9 +1,11 @@
 from typing import List
 
 from django.db.models.query import QuerySet
-from .base import BaseKeyboard
-from apps.timetables.models import EducationalLevel
 from vkbottle import Keyboard, KeyboardButtonColor, Text
+
+from apps.timetables.models import EducationalLevel
+
+from .base import BaseKeyboard
 
 
 class EducationalLevelsKeyboard(BaseKeyboard):

@@ -2,8 +2,8 @@ import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Type, TypeVar
-from django.conf import settings
 
+from django.conf import settings
 
 T = TypeVar("T", bound="BaseParser")
 

@@ -1,12 +1,15 @@
 from ast import Mult
+from functools import singledispatchmethod
 from typing import Any, Union
+
 from vkbottle.bot import Bot, Message
+
 from apps.feedback.bots import BaseBot
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.vk.app import init_endpoints
 from apps.feedback.bots.vk.base import BaseVkBot
-from apps.feedback.bots.vk.middlewares.create_account import CreateAccountMiddleware
-from functools import singledispatchmethod
+from apps.feedback.bots.vk.middlewares.create_account import \
+    CreateAccountMiddleware
 
 
 class VkBot(BaseBot, BaseVkBot):

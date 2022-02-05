@@ -1,8 +1,9 @@
+from celery.beat import crontab
+
 from apps.exchange.parse.http.lessons_main_site import LessonsParser
 from apps.exchange.usecases.exchange_settings import get_exchange_settings
 from apps.main.utils.date import to_message_format
 from project.celery import app as celery_app
-from celery.beat import crontab
 
 
 @celery_app.task()

@@ -1,6 +1,8 @@
 from typing import Any, Optional
+
 from django.core.management import BaseCommand
-from apps.timetables.models import Group, Classroom, Lesson, Subject, Teacher
+
+from apps.timetables.models import Classroom, Group, Lesson, Subject, Teacher
 
 
 class Command(BaseCommand):

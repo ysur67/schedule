@@ -1,15 +1,21 @@
+from vkbottle.bot import Message
+from vkbottle.dispatch.rules.base import CommandRule
+
 from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
-from apps.feedback.bots.commands.get_change_days_offset_info import GetChangeDaysOffsetInfoCommand
-from apps.feedback.bots.commands.get_current_status import GetCurrentStatusCommand
+from apps.feedback.bots.commands.get_change_days_offset_info import \
+    GetChangeDaysOffsetInfoCommand
+from apps.feedback.bots.commands.get_current_status import \
+    GetCurrentStatusCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
-from apps.feedback.bots.commands.save_current_group_to_user import SaveCurrentGroupCommand
-from apps.feedback.bots.commands.turn_off_notifications import TurnOffNotificationsCommand
-from apps.feedback.bots.commands.turn_on_notifications import TurnOnNotificationsCommand
+from apps.feedback.bots.commands.save_current_group_to_user import \
+    SaveCurrentGroupCommand
+from apps.feedback.bots.commands.turn_off_notifications import \
+    TurnOffNotificationsCommand
+from apps.feedback.bots.commands.turn_on_notifications import \
+    TurnOnNotificationsCommand
 from apps.feedback.bots.vk.base import BaseVkBot
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
 from apps.feedback.bots.vk.states import UserStates
-from vkbottle.dispatch.rules.base import CommandRule
-from vkbottle.bot import Message
 
 
 def init_endpoints(app: BaseVkBot):

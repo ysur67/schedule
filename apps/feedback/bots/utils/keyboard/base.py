@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Union, List
 from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import Any, Dict, List, Union
 
 
 class BaseKeyboard(ABC):

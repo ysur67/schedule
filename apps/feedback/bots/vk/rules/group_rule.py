@@ -1,7 +1,9 @@
 from typing import Union
+
+from asgiref.sync import sync_to_async
 from vkbottle.bot import Message
 from vkbottle.dispatch.rules import ABCRule
-from asgiref.sync import sync_to_async
+
 from apps.timetables.usecases.group import get_group_by_title
 
 

@@ -1,6 +1,8 @@
 from datetime import date
 from typing import List, Optional
+
 from django.db.models import QuerySet
+
 from apps.timetables.models import Group
 from apps.timetables.models.group import EducationalLevel
 

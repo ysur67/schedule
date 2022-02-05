@@ -1,10 +1,14 @@
-from typing import Any, Dict, Iterable, List, Union
-from .base import BaseCommand, MultipleMessages, SingleMessage
-from asgiref.sync import sync_to_async
-from apps.timetables.usecases.educational_level import get_educational_level_by_title
-from apps.timetables.usecases.group import get_groups_by_educational_level
-from apps.feedback.bots.utils.keyboard import GroupsKeyboard
 from functools import singledispatchmethod
+from typing import Any, Dict, Iterable, List, Union
+
+from asgiref.sync import sync_to_async
+
+from apps.feedback.bots.utils.keyboard import GroupsKeyboard
+from apps.timetables.usecases.educational_level import \
+    get_educational_level_by_title
+from apps.timetables.usecases.group import get_groups_by_educational_level
+
+from .base import BaseCommand, MultipleMessages, SingleMessage
 
 
 class GetGroupsByLevelCommand(BaseCommand):

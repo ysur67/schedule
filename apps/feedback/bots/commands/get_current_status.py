@@ -1,7 +1,10 @@
 from typing import Union
-from apps.feedback.bots.commands.utils import build_status_message
-from .base import CommandWithProfile, MultipleMessages, SingleMessage
+
 from asgiref.sync import sync_to_async
+
+from apps.feedback.bots.commands.utils import build_status_message
+
+from .base import CommandWithProfile, MultipleMessages, SingleMessage
 
 
 class GetCurrentStatusCommand(CommandWithProfile):

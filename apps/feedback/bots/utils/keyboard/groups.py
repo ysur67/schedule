@@ -1,12 +1,14 @@
 from typing import Any, Iterable, List, Union
+
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet
+from vkbottle import Keyboard, Text
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
 
 from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
-from .base import BaseKeyboard
-from vkbottle import Keyboard, Text
 from apps.timetables.models import Group
+
+from .base import BaseKeyboard
 
 
 class GroupsKeyboard(BaseKeyboard):
