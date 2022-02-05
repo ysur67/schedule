@@ -1,9 +1,10 @@
+import enum
 from typing import Dict, Optional, Type, TypeVar
-from ..base import BaseParser
+
 import requests
 from bs4 import BeautifulSoup
-import enum
 
+from ..base import BaseParser
 
 T = TypeVar("T", bound="BaseHttpParser")
 

@@ -1,10 +1,12 @@
 from typing import List
+
+import requests
 from bs4 import BeautifulSoup
+
 from apps.exchange.parse import BaseHttpParser
 from apps.timetables.models.group import EducationalLevel, Group
-from apps.timetables.usecases.educational_level import create_educational_level, get_educational_level_by_title
-import requests
-
+from apps.timetables.usecases.educational_level import (
+    create_educational_level, get_educational_level_by_title)
 from apps.timetables.usecases.group import create_group, get_group_by_title
 
 

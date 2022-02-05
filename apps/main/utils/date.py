@@ -1,6 +1,6 @@
-from datetime import date, timedelta, time
-from typing import Any
+from datetime import date, time, timedelta
 from functools import singledispatch
+from typing import Any
 
 
 def get_day_of_week(value: date) -> str:

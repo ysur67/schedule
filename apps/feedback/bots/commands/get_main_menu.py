@@ -1,6 +1,8 @@
 from typing import Union
+
 from apps.feedback.bots.utils.const import MAIN_MENU_KEYBOARD_LAYOUT
 from apps.feedback.bots.utils.keyboard import MainMenuKeyboard
+
 from .base import BaseCommand, MultipleMessages, SingleMessage
 
 

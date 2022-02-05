@@ -1,10 +1,13 @@
 from typing import Iterable, Union
+
+from asgiref.sync import sync_to_async
+
 from apps.feedback.bots.commands.utils import build_status_message
 from apps.feedback.bots.utils.keyboard.base import Button
 from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
 from apps.feedback.models import Profile
+
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
-from asgiref.sync import sync_to_async
 
 
 class GetSettingsCommand(CommandWithProfile):

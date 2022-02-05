@@ -1,11 +1,14 @@
+from datetime import date, timedelta
 from typing import Union
+
+from asgiref.sync import sync_to_async
 
 from apps.feedback.bots.commands.utils import build_lessons_message
 from apps.main.utils.date import to_message_format
-from apps.timetables.usecases.lesson import get_lessons_dict_by_group_and_date_range
+from apps.timetables.usecases.lesson import \
+    get_lessons_dict_by_group_and_date_range
+
 from .base import CommandWithProfile, MultipleMessages, SingleMessage
-from datetime import date, timedelta
-from asgiref.sync import sync_to_async
 
 
 class GetScheduleCommand(CommandWithProfile):

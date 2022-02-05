@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
+
 class ExchangeSettings(models.Model):
     is_parsing_enabled = models.BooleanField(
         verbose_name="Парсинг активирован?",

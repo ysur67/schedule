@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Any, Dict, Iterable, Optional, Union
 
 from asgiref.sync import sync_to_async
-from apps.feedback.bots.utils.const import Messengers
-from dataclasses import dataclass
-from apps.feedback.models import Profile
 
+from apps.feedback.bots.utils.const import Messengers
+from apps.feedback.models import Profile
 from apps.feedback.usecases.messenger import get_messenger_by_code
-from apps.feedback.usecases.profile import get_profile_by_messenger_and_account_id
+from apps.feedback.usecases.profile import \
+    get_profile_by_messenger_and_account_id
 
 
 @dataclass

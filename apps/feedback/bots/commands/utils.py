@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Any, Dict, List
+
 from apps.feedback.models import Profile
 from apps.main.utils.date import get_day_of_week, to_message_format
 from apps.timetables.models import Lesson
