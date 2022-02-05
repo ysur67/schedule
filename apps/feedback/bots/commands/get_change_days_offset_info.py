@@ -19,8 +19,7 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
         msg += "Писать <> не нужно\n\n"
         msg += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
         layout: Iterable[Button] = await self.build_settings_keyboard_layout(self.profile)
-        _keyboard = SettingsKeyboard(layout)
-        keyboard = _keyboard.to_vk_api()
+        keyboard = SettingsKeyboard(layout)
         return SingleMessage(
             message=msg,
             keyboard=keyboard

@@ -20,22 +20,8 @@ class GetGroupsByLevelCommand(BaseCommand):
     async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
-        _keyboard = GroupsKeyboard(groups)
-        keyboard_data = await sync_to_async(_keyboard.to_vk_api)()
-        return await self.build_response(keyboard_data)
-
-    @singledispatchmethod
-    async def build_response(self, keyboard_data: Any) -> Union[SingleMessage, MultipleMessages]:
-        raise NotImplementedError(f"There is no approach for type {type(keyboard_data)}")
-
-    @build_response.register(str)
-    async def _(self, keyboard_data: str) -> SingleMessage:
-        return SingleMessage(message="Выберите одну из групп", keyboard=keyboard_data)
-
-    @build_response.register(list)
-    async def _(self, keyboard_data: List[str]) -> MultipleMessages:
-        result: List[SingleMessage] = []
-        for keyboard in keyboard_data:
-            keyboard_response = await self.build_response(keyboard)
-            result.append(keyboard_response)
-        return MultipleMessages(messages=result)
+        keyboard = GroupsKeyboard(groups)
+        return SingleMessage(
+            message="Выберите одну из групп",
+            keyboard=keyboard
+        )

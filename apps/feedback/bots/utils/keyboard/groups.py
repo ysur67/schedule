@@ -20,7 +20,7 @@ class GroupsKeyboard(BaseKeyboard):
             return self._build_multiple_keyboards(self.data)
         return self._build_single_keyboard(self.data)
 
-    def _build_single_keyboard(self, groups: QuerySet[Group]) -> Keyboard:
+    def _build_single_keyboard(self, groups: QuerySet[Group]) -> str:
         OFFSET = 2
         result = Keyboard(inline=self.is_inline)
         for index, value in enumerate(groups):
@@ -32,7 +32,7 @@ class GroupsKeyboard(BaseKeyboard):
             result.add(Text("Главное меню"), KeyboardButtonColor.PRIMARY)
         return result.get_json()
 
-    def _build_multiple_keyboards(self, groups: QuerySet[Group]) -> Iterable[Keyboard]:
+    def _build_multiple_keyboards(self, groups: QuerySet[Group]) -> Iterable[str]:
         ITEMS_PER_PAGE = 8
         paginator = Paginator(groups.order_by("id"), ITEMS_PER_PAGE)
         result: List[str] = []

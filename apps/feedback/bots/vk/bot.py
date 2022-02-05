@@ -1,6 +1,5 @@
-from ast import Mult
 from functools import singledispatchmethod
-from typing import Any, Union
+from typing import Any, Union, List, Dict
 
 from vkbottle.bot import Bot, Message
 
@@ -36,13 +35,13 @@ class VkBot(BaseBot, BaseVkBot):
         return [await self.bot.api.messages.send(peer_id=user_id, random_id=0, **item.to_dict()) for item in message.messages]
 
     @singledispatchmethod
-    async def send_response(self, response: Any, message: Message) -> None:
+    async def send_response(self, response: Union[Dict, List[Dict]], message: Message) -> None:
         raise NotImplementedError(f"There is no approach for type {type(response)}")
 
-    @send_response.register(SingleMessage)
-    async def _(self, response: SingleMessage, message: Message) -> None:
-        return await message.answer(**response.to_dict())
+    @send_response.register(dict)
+    async def _(self, response: Dict, message: Message) -> None:
+        return await message.answer(**response)
 
-    @send_response.register(MultipleMessages)
-    async def _(self, response: MultipleMessages, message: Message) -> None:
-        return [await message.answer(**item.to_dict()) for item in response.messages]
+    @send_response.register(list)
+    async def _(self, response: List[Dict], message: Message) -> None:
+        return [await message.answer(**item) for item in response]
