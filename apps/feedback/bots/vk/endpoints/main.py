@@ -14,4 +14,5 @@ def init_endpoints(app: BaseVkBot):
     @app.bot.on.message(text=["Начать", "Главное меню"])
     async def get_main_menu(message: Message):
         result = await GetMainMenuCommand().execute()
+        await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(result, message)
