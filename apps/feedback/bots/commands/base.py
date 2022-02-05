@@ -5,7 +5,6 @@ from typing import Any, Dict, Iterable, Optional, Union
 from asgiref.sync import sync_to_async
 
 from apps.feedback.bots.utils.const import Messengers
-from apps.feedback.models import Profile
 from apps.feedback.usecases.messenger import get_messenger_by_code
 from apps.feedback.usecases.profile import \
     get_profile_by_messenger_and_account_id
@@ -38,6 +37,8 @@ class BaseCommand(ABC):
     async def execute(self) -> Union[SingleMessage, MultipleMessages]:
         await self.pre_execute()
         if self.type == Messengers.VK:
+            return await self._vk_execute()
+        elif self.type == Messengers.TELEGRAM:
             return await self._vk_execute()
         raise NotImplementedError(f"There is no approach for type {self.type}")
 
