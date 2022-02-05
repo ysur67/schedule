@@ -37,14 +37,12 @@ class BaseCommand(ABC):
 
     async def execute(self) -> Union[SingleMessage, MultipleMessages]:
         await self.pre_execute()
-        if self.type == Messengers.VK:
-            return await self._vk_execute()
-        elif self.type == Messengers.TELEGRAM:
-            return await self._vk_execute()
+        if self.type in (Messengers.VK, Messengers.TELEGRAM):
+            return await self._execute_for_messengers()
         raise NotImplementedError(f"There is no approach for type {self.type}")
 
     @abstractmethod
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         pass
 
     async def pre_execute(self) -> None:

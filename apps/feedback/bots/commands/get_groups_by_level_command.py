@@ -17,7 +17,7 @@ class GetGroupsByLevelCommand(BaseCommand):
     def message(self) -> str:
         return self._require_field("message")
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
         _keyboard = GroupsKeyboard(groups)

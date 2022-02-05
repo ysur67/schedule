@@ -15,7 +15,7 @@ class SetDaysOffsetCommand(CommandWithProfile):
     def new_days_offset(self) -> int:
         return self._require_field("days_offset")
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         _keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
         keyboard_data = _keyboard.to_vk_api()
         try:

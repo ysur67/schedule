@@ -21,7 +21,7 @@ class GetScheduleCommand(CommandWithProfile):
     def date_end(self) -> date:
         return self._require_field("date_end", raise_exception=False)
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         group = await sync_to_async(self.profile.get_group)()
         if not group:
             result = "У тебя не выбрана группа.\n"

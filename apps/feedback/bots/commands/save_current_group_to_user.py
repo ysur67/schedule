@@ -15,7 +15,7 @@ class SaveCurrentGroupCommand(CommandWithProfile):
     def group(self) -> str:
         return self._require_field("group")
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         group = await sync_to_async(get_group_by_title)(self.group)
         await sync_to_async(self.profile.set_group)(group)
         _keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
