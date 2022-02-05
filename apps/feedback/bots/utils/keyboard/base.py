@@ -15,6 +15,10 @@ class BaseKeyboard(ABC):
     def to_vk_api(self) -> Union[str, List[str]]:
         pass
 
+    # @abstractmethod
+    def to_telegram_api(self) -> Any:
+        pass
+
     def _is_last(self, index: int, data: Iterable) -> bool:
         if not isinstance(data, Iterable):
             return False
