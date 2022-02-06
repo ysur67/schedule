@@ -3,6 +3,7 @@ from typing import Dict, Union, List
 from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
 from apps.feedback.bots.commands.base import SingleMessage, MultipleMessages
 from asgiref.sync import sync_to_async
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
 
 
 class ToTelegramApiMapper(BaseMessengerMapper):
@@ -18,10 +19,21 @@ class ToTelegramApiMapper(BaseMessengerMapper):
         keyboard_data = None
         if response.keyboard:
             keyboard_data = await sync_to_async(response.keyboard.to_telegram_api)()
-        return {
-            "text": response.message,
-            "reply_markup": keyboard_data
-        }
+        if keyboard_data is None:
+            return {
+                "text": response.message,
+            }
+        if isinstance(keyboard_data, ReplyKeyboardMarkup):
+            return {
+                "text": response.message,
+                "reply_markup": keyboard_data
+            }
+        if isinstance(keyboard_data, list):
+            return [{
+                "text": response.message,
+                "reply_markup": item
+            } for item in keyboard_data]
+        raise NotImplementedError(f"There is no approach for type {type(keyboard_data)}")
 
     @convert.register(MultipleMessages)
     @classmethod

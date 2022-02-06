@@ -11,7 +11,7 @@ from apps.feedback.bots.commands.turn_off_notifications import \
 from apps.feedback.bots.commands.turn_on_notifications import \
     TurnOnNotificationsCommand
 
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from apps.feedback.bots.telegram.base import BaseTelegramBot
 from apps.feedback.bots.telegram.filters.group_exist import GroupExistFilter
 from apps.feedback.bots.utils.const import Messengers
@@ -21,20 +21,20 @@ from aiogram.dispatcher.filters import Text
 
 
 def init_endpoints(app: BaseTelegramBot):
-    @app.dp.message_handler(
+    @app.dp.callback_query_handler(
         GroupExistFilter(),
         state=UserStates.CHOOSE_GROUP_STATE
     )
-    async def save_current_group(message: Message):
-        user = message.from_user
+    async def save_current_group(obj: CallbackQuery):
+        user = obj.from_user
         result = await SaveCurrentGroupCommand(
             messenger=Messengers.TELEGRAM,
-            group=message.text,
+            group=obj.data,
             account_id=user.id
         ).execute()
         state = app.dp.current_state(user=user.id)
         await state.reset_state()
-        await app.send_response(await ToTelegramApiMapper.convert(result), message)
+        await app.send_message(await ToTelegramApiMapper.convert(result), user.id)
 
     @app.dp.message_handler(Text(equals=["статус"], ignore_case=True), state="*")
     async def get_current_profile_status(message: Message):

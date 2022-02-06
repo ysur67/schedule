@@ -20,7 +20,13 @@ class TelegramBot(BaseBot, BaseTelegramBot):
         self.dp = Dispatcher(self.bot, storage=MemoryStorage())
         self.dp.middleware.setup(CreateAccountMiddleware())
         for item in self.FILTERS:
-            self.dp.bind_filter(item, event_handlers=[self.dp.message_handlers])
+            self.dp.bind_filter(
+                item,
+                event_handlers=[
+                    self.dp.message_handlers,
+                    self.dp.callback_query_handlers
+                ]
+            )
         init_endpoints(self)
 
     def listen(self) -> None:
@@ -39,13 +45,13 @@ class TelegramBot(BaseBot, BaseTelegramBot):
         return [await message.answer(**item) for item in response]
 
     @singledispatchmethod
-    async def send_message(self, message: Union[SingleMessage, MultipleMessages], user_id: int) -> None:
+    async def send_message(self, message: Union[Dict, List[Dict]], user_id: int) -> None:
         raise NotImplementedError(f"There is no approach for type {type(message)}")
 
-    @send_message.register(SingleMessage)
-    async def _(self, message: SingleMessage, user_id: int) -> None:
-        return await self.bot.send_message(chat_id=user_id, **message.to_dict())
+    @send_message.register(dict)
+    async def _(self, message: Dict, user_id: int) -> None:
+        return await self.bot.send_message(chat_id=user_id, **message)
 
-    @send_message.register(MultipleMessages)
-    async def _(self, message: MultipleMessages, user_id: int) -> None:
-        return [await self.bot.send_message(chat_id=user_id, *item.to_dict().values()) for item in message.messages]
+    @send_message.register(list)
+    async def _(self, message: List[Dict], user_id: int) -> None:
+        return [await self.bot.send_message(chat_id=user_id, **item) for item in message]
