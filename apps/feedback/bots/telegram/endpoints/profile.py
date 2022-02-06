@@ -113,13 +113,17 @@ def init_endpoints(app: BaseTelegramBot):
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
     @app.dp.message_handler(
-        commands=["/Получать на"],
+        Text(startswith=["!Получать на"], ignore_case=True),
         state=UserStates.CHANGE_DAYS_OFFSET_STATE
     )
     async def change_days_offset(message: Message):
-        print(message.get_args())
-        # result = await SetDaysOffsetCommand(
-        #     account_id=message.peer_id, days_offset=args[0]
-        # ).execute()
-        # await app.bot.state_dispenser.delete(message.peer_id)
-        # await app.send_response(await ToTelegramApiMapper.convert(result), message)
+        user = message.from_user
+        days_offset = message.text.split(" ")[-1]
+        result = await SetDaysOffsetCommand(
+            messenger=Messengers.TELEGRAM,
+            account_id=user.id,
+            days_offset=days_offset
+        ).execute()
+        state = app.dp.current_state(user=user.id)
+        await state.reset_state()
+        await app.send_response(await ToTelegramApiMapper.convert(result), message)
