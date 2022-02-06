@@ -8,15 +8,19 @@ from apps.feedback.bots.telegram.middlewares import CreateAccountMiddleware
 from aiogram.types import Message
 from .base import BaseTelegramBot
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from apps.feedback.bots.telegram.filters import GroupExistFilter, EducationalLevelExistFilter
 
 
 class TelegramBot(BaseBot, BaseTelegramBot):
+    FILTERS = [GroupExistFilter, EducationalLevelExistFilter]
 
     def __init__(self, token: str) -> None:
         super().__init__(token)
         self.bot = Bot(token)
         self.dp = Dispatcher(self.bot, storage=MemoryStorage())
         self.dp.middleware.setup(CreateAccountMiddleware())
+        for item in self.FILTERS:
+            self.dp.bind_filter(item, event_handlers=[self.dp.message_handlers])
         init_endpoints(self)
 
     def listen(self) -> None:
