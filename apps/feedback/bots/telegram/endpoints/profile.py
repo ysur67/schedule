@@ -13,6 +13,7 @@ from apps.feedback.bots.commands.turn_on_notifications import \
 
 from aiogram.types import Message
 from apps.feedback.bots.telegram.base import BaseTelegramBot
+from apps.feedback.bots.telegram.filters.group_exist import GroupExistFilter
 from apps.feedback.bots.utils.const import Messengers
 from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 from apps.feedback.bots.telegram.states import UserStates
@@ -20,7 +21,10 @@ from aiogram.dispatcher.filters import Text
 
 
 def init_endpoints(app: BaseTelegramBot):
-    @app.dp.message_handler(state=UserStates.CHOOSE_GROUP_STATE)
+    @app.dp.message_handler(
+        GroupExistFilter(),
+        state=UserStates.CHOOSE_GROUP_STATE
+    )
     async def save_current_group(message: Message):
         user = message.from_user
         result = await SaveCurrentGroupCommand(
@@ -32,7 +36,7 @@ def init_endpoints(app: BaseTelegramBot):
         await state.reset_state()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
-    @app.dp.message_handler(Text(equals=["статус"], ignore_case=True))
+    @app.dp.message_handler(Text(equals=["статус"], ignore_case=True), state="*")
     async def get_current_profile_status(message: Message):
         result = await GetCurrentStatusCommand(
             messenger=Messengers.TELEGRAM,
@@ -40,7 +44,7 @@ def init_endpoints(app: BaseTelegramBot):
         ).execute()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
-    @app.dp.message_handler(Text(equals=["настройки"], ignore_case=True))
+    @app.dp.message_handler(Text(equals=["настройки"], ignore_case=True), state="*")
     async def get_settings(message: Message):
         result = await GetSettingsCommand(
             messenger=Messengers.TELEGRAM,

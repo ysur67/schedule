@@ -26,7 +26,7 @@ class EducationalLevelsKeyboard(BaseKeyboard):
     def to_telegram_api(self) -> Union[ReplyKeyboardMarkup, List[InlineKeyboardMarkup]]:
         result = ReplyKeyboardMarkup()
         for index, value in enumerate(self.data):
-            result.add(KeyboardButton(value))
+            result.add(KeyboardButton(value.title))
             if not self._is_last(index, self.data):
                 result.row()
         if self.has_cancel_button:

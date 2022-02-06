@@ -8,7 +8,8 @@ from aiogram.dispatcher.filters import Text
 
 def init_endpoints(app: BaseTelegramBot):
     @app.dp.message_handler(
-        Text(equals=["Привет", "Покажи мой ID"], ignore_case=True)
+        Text(equals=["Привет", "Покажи мой ID"], ignore_case=True),
+        state="*"
     )
     async def echo(message: Message):
         result = await ShowIDCommand(user_id=message.from_user.id).execute()
