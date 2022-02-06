@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
+from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
 
 
 class BaseKeyboard(ABC):
@@ -15,8 +16,8 @@ class BaseKeyboard(ABC):
     def to_vk_api(self) -> Union[str, List[str]]:
         pass
 
-    # @abstractmethod
-    def to_telegram_api(self) -> Any:
+    @abstractmethod
+    def to_telegram_api(self) -> Union[ReplyKeyboardMarkup, List[InlineKeyboardMarkup]]:
         pass
 
     def _is_last(self, index: int, data: Iterable) -> bool:

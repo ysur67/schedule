@@ -26,4 +26,4 @@ class ToTelegramApiMapper(BaseMessengerMapper):
     @convert.register(MultipleMessages)
     @classmethod
     async def _(cls, response: MultipleMessages) -> Dict:
-        return [cls.convert(item) for item in response.messages]
+        return [await cls.convert(item) for item in response.messages]
