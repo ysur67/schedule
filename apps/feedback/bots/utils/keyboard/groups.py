@@ -59,16 +59,11 @@ class GroupsKeyboard(BaseKeyboard):
         return result
 
     def _build_single_telegram_keyboard(self, groups: QuerySet[Group]) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
-        if not self.is_inline:
-            result = ReplyKeyboardMarkup(resize_keyboard=True)
-            for index, value in enumerate(groups):
-                title = value.title
-                button = KeyboardButton(title)
-                result.add(button)
-                if (index + 1) % self.OFFSET == 0 and not self._is_last(index, groups):
-                    result.row()
-            return result
-        buttons = []
+        result = InlineKeyboardMarkup() if self.is_inline else ReplyKeyboardMarkup(resize_keyboard=True)
         for index, value in enumerate(groups):
-            buttons.append(InlineKeyboardButton(text=value.title, callback_data=value.title))
-        return InlineKeyboardMarkup(row_width=2).row(*buttons)
+            title = value.title
+            button = InlineKeyboardButton(title, callback_data=title) if self.is_inline else KeyboardButton(title)
+            result.add(button)
+            if ((index + 1) % self.OFFSET == 0) and not self._is_last(index, groups):
+                result.row()
+        return result
