@@ -21,17 +21,16 @@ def init_endpoints(app: BaseTelegramBot):
     )
     async def get_educational_levels(message: Message):
         result = await EducationalLevelsCommand().execute()
-        user = message.from_user
-        state = app.dp.current_state(user=user.id)
-        await state.set_state(UserStates.CHOOSE_GROUP_STATE)
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
     @app.dp.message_handler(
         EducationalLevelExistFilter(),
-        state=UserStates.CHOOSE_GROUP_STATE
     )
     async def get_groups(message: Message):
         result = await GetGroupsByLevelCommand(message=message.text).execute()
+        user = message.from_user
+        state = app.dp.current_state(user=user.id)
+        await state.set_state(UserStates.CHOOSE_GROUP_STATE)
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
     @app.dp.message_handler(
