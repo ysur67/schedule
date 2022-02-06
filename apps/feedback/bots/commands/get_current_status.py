@@ -9,6 +9,6 @@ from .base import CommandWithProfile, MultipleMessages, SingleMessage
 
 class GetCurrentStatusCommand(CommandWithProfile):
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         msg = await sync_to_async(build_status_message)(self.profile)
         return SingleMessage(message=msg)

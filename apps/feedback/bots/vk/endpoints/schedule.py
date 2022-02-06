@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from asgiref.sync import sync_to_async
 from vkbottle.bot import Message
 
 from apps.feedback.bots.commands.educational_levels import \
@@ -7,6 +8,7 @@ from apps.feedback.bots.commands.educational_levels import \
 from apps.feedback.bots.commands.get_groups_by_level_command import \
     GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
+from apps.feedback.bots.utils.mappers.vk import ToVkApiMapper
 from apps.feedback.bots.vk.base import BaseVkBot
 from apps.feedback.bots.vk.rules.educational_level_rule import \
     EducationalLevelExistRule
@@ -19,12 +21,12 @@ def init_endpoints(app: BaseVkBot):
     async def get_educational_levels(message: Message):
         result = await EducationalLevelsCommand().execute()
         await app.bot.state_dispenser.set(message.peer_id, UserStates.CHOOSE_GROUP_STATE)
-        await app.send_response(result, message)
+        await app.send_response(await ToVkApiMapper.convert(result), message)
 
     @app.bot.on.message(EducationalLevelExistRule())
     async def get_groups(message: Message):
         result = await GetGroupsByLevelCommand(message=message.text).execute()
-        await app.send_response(result, message)
+        await app.send_response(await ToVkApiMapper.convert(result), message)
 
     @app.bot.on.message(text="Показать расписание")
     async def show_schedule(message: Message):
@@ -32,4 +34,4 @@ def init_endpoints(app: BaseVkBot):
             date_start=datetime.now().date(),
             account_id=message.peer_id
         ).execute()
-        await app.send_response(result, message)
+        await app.send_response(await ToVkApiMapper.convert(result), message)
