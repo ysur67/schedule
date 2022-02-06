@@ -8,6 +8,11 @@ class ApplicationSettings(BaseModel):
         verbose_name="Токен для бота ВК",
         max_length=300
     )
+    telegram_token = models.CharField(
+        verbose_name="Токен для бота Телеграм",
+        max_length=300,
+        default=""
+    )
 
     class Meta:
         verbose_name = "Настройки"

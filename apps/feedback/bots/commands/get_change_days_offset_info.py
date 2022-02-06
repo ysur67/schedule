@@ -10,7 +10,7 @@ from .base import CommandWithProfile, MultipleMessages, SingleMessage
 
 class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
 
-    async def _vk_execute(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
         msg = "Здесь ты можешь изменить кол-во дней, "
         msg += "на которое я буду показывать тебе расписание\n\n"
         msg += "Ты можешь выбрать из предложенных в клавиатуре вариантов "
@@ -19,8 +19,7 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
         msg += "Писать <> не нужно\n\n"
         msg += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
         layout: Iterable[Button] = await self.build_settings_keyboard_layout(self.profile)
-        _keyboard = SettingsKeyboard(layout)
-        keyboard = _keyboard.to_vk_api()
+        keyboard = SettingsKeyboard(layout)
         return SingleMessage(
             message=msg,
             keyboard=keyboard
