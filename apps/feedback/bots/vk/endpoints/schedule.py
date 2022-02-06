@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from asgiref.sync import sync_to_async
 from vkbottle.bot import Message
 
 from apps.feedback.bots.commands.educational_levels import \
@@ -12,7 +13,6 @@ from apps.feedback.bots.vk.base import BaseVkBot
 from apps.feedback.bots.vk.rules.educational_level_rule import \
     EducationalLevelExistRule
 from apps.feedback.bots.vk.states import UserStates
-from asgiref.sync import sync_to_async
 
 
 def init_endpoints(app: BaseVkBot):

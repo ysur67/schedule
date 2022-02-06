@@ -1,3 +1,6 @@
+from aiogram.dispatcher.filters import Text
+from aiogram.types import CallbackQuery, Message
+
 from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
 from apps.feedback.bots.commands.get_change_days_offset_info import \
     GetChangeDaysOffsetInfoCommand
@@ -10,14 +13,11 @@ from apps.feedback.bots.commands.turn_off_notifications import \
     TurnOffNotificationsCommand
 from apps.feedback.bots.commands.turn_on_notifications import \
     TurnOnNotificationsCommand
-
-from aiogram.types import Message, CallbackQuery
 from apps.feedback.bots.telegram.base import BaseTelegramBot
 from apps.feedback.bots.telegram.filters.group_exist import GroupExistFilter
+from apps.feedback.bots.telegram.states import UserStates
 from apps.feedback.bots.utils.const import Messengers
 from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
-from apps.feedback.bots.telegram.states import UserStates
-from aiogram.dispatcher.filters import Text
 
 
 def init_endpoints(app: BaseTelegramBot):

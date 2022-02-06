@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Union, Dict, List
+from typing import Dict, List, Union
+
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 

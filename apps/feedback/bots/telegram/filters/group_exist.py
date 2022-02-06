@@ -1,8 +1,10 @@
 from typing import Union
+
 from aiogram.dispatcher.filters.filters import Filter
+from aiogram.types import CallbackQuery, Message
 from asgiref.sync import sync_to_async
+
 from apps.timetables.usecases.group import get_group_by_title
-from aiogram.types import Message, CallbackQuery
 
 
 class GroupExistFilter(Filter):

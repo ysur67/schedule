@@ -1,6 +1,8 @@
 import enum
 from typing import Any, Iterable, List, Union
 
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           KeyboardButton, ReplyKeyboardMarkup)
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet
 from vkbottle import Keyboard, Text
@@ -10,7 +12,6 @@ from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
 from apps.timetables.models import Group
 
 from .base import BaseKeyboard
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton
 
 
 class GroupsKeyboard(BaseKeyboard):

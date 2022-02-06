@@ -1,9 +1,11 @@
 from functools import singledispatchmethod
-from typing import Dict, Union, List
-from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
-from apps.feedback.bots.commands.base import SingleMessage, MultipleMessages
+from typing import Dict, List, Union
+
+from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
 from asgiref.sync import sync_to_async
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
+
+from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
 
 
 class ToTelegramApiMapper(BaseMessengerMapper):

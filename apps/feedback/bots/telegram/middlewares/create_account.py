@@ -1,9 +1,11 @@
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.types import Message
 from asgiref.sync import sync_to_async
-from apps.feedback.usecases.messenger import get_messenger_by_code
-from apps.feedback.usecases.account_messenger import create_account, get_account_by_messenger_and_id
+
 from apps.feedback.models import MessengerAccount
+from apps.feedback.usecases.account_messenger import (
+    create_account, get_account_by_messenger_and_id)
+from apps.feedback.usecases.messenger import get_messenger_by_code
 from apps.feedback.usecases.profile import create_profile
 
 

@@ -1,9 +1,10 @@
-from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
-from apps.feedback.bots.telegram.base import BaseTelegramBot
-from aiogram.types import Message
-from apps.feedback.bots.commands.show_id import ShowIDCommand
-from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 from aiogram.dispatcher.filters import Text
+from aiogram.types import Message
+
+from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
+from apps.feedback.bots.commands.show_id import ShowIDCommand
+from apps.feedback.bots.telegram.base import BaseTelegramBot
+from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 
 
 def init_endpoints(app: BaseTelegramBot):

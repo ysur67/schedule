@@ -1,7 +1,9 @@
 from typing import Any, Optional
+
 from django.core.management import BaseCommand
-from apps.main.usecases import get_settings
+
 from apps.feedback.bots.telegram import TelegramBot
+from apps.main.usecases import get_settings
 
 
 class Command(BaseCommand):

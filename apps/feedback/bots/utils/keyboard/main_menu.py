@@ -1,7 +1,7 @@
-from typing import List, Union, Any
+from typing import Any, List, Union
 
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 from vkbottle import Keyboard, Text
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from .base import BaseKeyboard
 

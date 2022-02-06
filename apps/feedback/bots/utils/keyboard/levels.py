@@ -1,8 +1,9 @@
 from typing import List, Union
 
+from aiogram.types import (InlineKeyboardMarkup, KeyboardButton,
+                           ReplyKeyboardMarkup)
 from django.db.models.query import QuerySet
 from vkbottle import Keyboard, KeyboardButtonColor, Text
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton
 
 from apps.timetables.models import EducationalLevel
 

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Union, List
-from apps.feedback.bots.commands.base import SingleMessage, MultipleMessages
+from typing import Dict, List, Union
+
+from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 
 
 class BaseMessengerMapper(ABC):

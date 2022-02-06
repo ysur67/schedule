@@ -1,9 +1,9 @@
 from typing import Iterable, List, Union
 
+from aiogram.types import (InlineKeyboardMarkup, KeyboardButton,
+                           ReplyKeyboardMarkup)
 from vkbottle import Keyboard, Text
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
-
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton
 
 from .base import BaseKeyboard, Button
 

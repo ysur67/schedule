@@ -1,14 +1,18 @@
 from functools import singledispatchmethod
+from typing import Any, Dict, List, Union
+
+from aiogram import Bot, Dispatcher, executor
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.types import Message
+
 from apps.feedback.bots import BaseBot
-from typing import Union, Any, Dict, List
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.telegram.app import init_endpoints
-from aiogram import Bot, Dispatcher, executor
+from apps.feedback.bots.telegram.filters import (EducationalLevelExistFilter,
+                                                 GroupExistFilter)
 from apps.feedback.bots.telegram.middlewares import CreateAccountMiddleware
-from aiogram.types import Message
+
 from .base import BaseTelegramBot
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from apps.feedback.bots.telegram.filters import GroupExistFilter, EducationalLevelExistFilter
 
 
 class TelegramBot(BaseBot, BaseTelegramBot):

@@ -1,5 +1,5 @@
 from functools import singledispatchmethod
-from typing import Any, Union, List, Dict
+from typing import Any, Dict, List, Union
 
 from vkbottle.bot import Bot, Message
 

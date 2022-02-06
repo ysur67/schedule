@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
+
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
 
 
