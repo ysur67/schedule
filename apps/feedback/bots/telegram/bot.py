@@ -4,6 +4,7 @@ from typing import Union, Any, Dict, List
 from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
 from apps.feedback.bots.telegram.app import init_endpoints
 from aiogram import Bot, Dispatcher, executor
+from apps.feedback.bots.telegram.middlewares import CreateAccountMiddleware
 from aiogram.types import Message
 from .base import BaseTelegramBot
 
@@ -14,6 +15,7 @@ class TelegramBot(BaseBot, BaseTelegramBot):
         super().__init__(token)
         self.bot = Bot(token)
         self.dp = Dispatcher(self.bot)
+        self.dp.middleware.setup(CreateAccountMiddleware())
         init_endpoints(self)
 
     def listen(self) -> None:
