@@ -25,7 +25,7 @@ def init_endpoints(app: BaseTelegramBot):
         GroupExistFilter(),
         state=UserStates.CHOOSE_GROUP_STATE
     )
-    async def save_current_group(obj: CallbackQuery):
+    async def save_current_group_from_callback(obj: CallbackQuery):
         user = obj.from_user
         result = await SaveCurrentGroupCommand(
             messenger=Messengers.TELEGRAM,
@@ -34,7 +34,23 @@ def init_endpoints(app: BaseTelegramBot):
         ).execute()
         state = app.dp.current_state(user=user.id)
         await state.reset_state()
+        await obj.answer(text="Выбор успешно сохранен")
         await app.send_message(await ToTelegramApiMapper.convert(result), user.id)
+
+    @app.dp.message_handler(
+        GroupExistFilter(),
+        state=UserStates.CHOOSE_GROUP_STATE
+    )
+    async def save_current_group_from_message(message: Message):
+        user = message.from_user
+        result = await SaveCurrentGroupCommand(
+            messenger=Messengers.TELEGRAM,
+            group=message.text,
+            account_id=user.id
+        ).execute()
+        state = app.dp.current_state(user=user.id)
+        await state.reset_state()
+        await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
     @app.dp.message_handler(Text(equals=["статус"], ignore_case=True), state="*")
     async def get_current_profile_status(message: Message):
