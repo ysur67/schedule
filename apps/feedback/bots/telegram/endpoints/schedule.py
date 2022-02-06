@@ -8,6 +8,7 @@ from apps.feedback.bots.telegram.base import BaseTelegramBot
 from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 from aiogram.types import Message
 from aiogram.dispatcher.filters import Text
+from apps.feedback.bots.telegram.states import UserStates
 
 
 def init_endpoints(app: BaseTelegramBot):
@@ -19,10 +20,10 @@ def init_endpoints(app: BaseTelegramBot):
         result = await EducationalLevelsCommand().execute()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
-    # @app.dp.message_handler()
-    # async def get_groups(message: Message):
-    #     result = await GetGroupsByLevelCommand(message=message.text).execute()
-    #     await app.send_response(await ToTelegramApiMapper.convert(result), message)
+    @app.dp.message_handler(state=UserStates.CHOOSE_GROUP_STATE)
+    async def get_groups(message: Message):
+        result = await GetGroupsByLevelCommand(message=message.text).execute()
+        await app.send_response(await ToTelegramApiMapper.convert(result), message)
 
     @app.dp.message_handler(Text(equals=["Показать расписание"], ignore_case=True))
     async def show_schedule(message: Message):

@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher, executor
 from apps.feedback.bots.telegram.middlewares import CreateAccountMiddleware
 from aiogram.types import Message
 from .base import BaseTelegramBot
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 
 class TelegramBot(BaseBot, BaseTelegramBot):
@@ -14,7 +15,7 @@ class TelegramBot(BaseBot, BaseTelegramBot):
     def __init__(self, token: str) -> None:
         super().__init__(token)
         self.bot = Bot(token)
-        self.dp = Dispatcher(self.bot)
+        self.dp = Dispatcher(self.bot, storage=MemoryStorage())
         self.dp.middleware.setup(CreateAccountMiddleware())
         init_endpoints(self)
 

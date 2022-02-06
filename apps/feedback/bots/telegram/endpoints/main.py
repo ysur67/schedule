@@ -16,7 +16,10 @@ def init_endpoints(app: BaseTelegramBot):
 
     @app.dp.message_handler(
         Text(equals=["начать", "главное меню"], ignore_case=True),
+        state="*"
     )
     async def get_main_menu(message: Message):
         result = await GetMainMenuCommand().execute()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
+        state = app.dp.current_state(user=message.from_user.id)
+        await state.reset_state()
