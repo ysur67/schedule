@@ -26,11 +26,11 @@ def debug_task(self):
 app.conf.beat_schedule = {
     'parse-groups-info-every-hour': {
         'task': 'apps.exchange.tasks.groups.parse_groups_info',
-        'schedule': crontab(hour="*/3"),
+        'schedule': crontab(hour="*/3", minute="0"),
     },
     'parse-lessons-info-every-hour': {
         'task': 'apps.exchange.tasks.lessons.parse_lessons_info',
-        'schedule': crontab(minute="*/60"),
+        'schedule': crontab(hour="*/1", minute="0"),
     },
     'send-lessons-notifications-everyday': {
         'task': 'apps.feedback.tasks.lessons.send_notifications_in_lesson_day',
