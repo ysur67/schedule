@@ -2,6 +2,7 @@ from typing import Optional
 
 from django.db import models
 from django.db.models.query import QuerySet
+from django.contrib.auth.models import User
 
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.main.models.mixins import BaseModel
@@ -24,6 +25,11 @@ class Profile(BaseModel):
     send_notifications_on_lesson_day = models.BooleanField(
         verbose_name="Отправлять уведомления о предстоящих занятиях в день занятий?",
         default=True,
+    )
+    user = models.OneToOneField(
+        User, on_delete=models.SET_NULL,
+        null=True, blank=True,
+        verbose_name="Аккаунт Django",
     )
 
     class Meta:

@@ -3,8 +3,6 @@ from functools import singledispatch
 from multiprocessing.sharedctypes import Value
 from typing import Any, Dict, List, Optional
 
-from django.db.models.query import QuerySet
-
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile
 from apps.main.utils.date import date_range
@@ -14,6 +12,7 @@ from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
 from apps.timetables.models.teacher import Teacher
 from apps.timetables.usecases.group import get_groups_that_have_lessons_in_date
+from django.db.models.query import QuerySet
 
 
 class GetLessonByDateAndClassroomParam:
@@ -118,3 +117,7 @@ def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: dat
 
 def get_lessons_by_profile_and_date(profile: Profile, date_: date) -> QuerySet[Lesson]:
     return Lesson.objects.filter(group=profile.get_group(), date=date_)
+
+
+def get_all_lessons() -> QuerySet[Lesson]:
+    return Lesson.objects.all()
