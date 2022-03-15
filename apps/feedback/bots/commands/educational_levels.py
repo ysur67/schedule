@@ -11,4 +11,4 @@ class EducationalLevelsCommand(BaseCommand):
 
     async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
         keyboard = EducationalLevelsKeyboard(get_all_educational_levels())
-        return SingleMessage(message="Выберите один из пунктов меню", keyboard=keyboard)
+        return [SingleMessage(message="Выберите один из пунктов меню", keyboard=keyboard)]

@@ -27,13 +27,14 @@ class GetScheduleCommand(CommandWithProfile):
             result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
             return SingleMessage(message=result)
         date_start = self.date_start
-        date_end = self.date_end or date_start + timedelta(days=self.profile.days_offset)
+        date_end = self.date_end or date_start + \
+            timedelta(days=self.profile.days_offset)
         lessons = await sync_to_async(get_lessons_dict_by_group_and_date_range)(group, date_start, date_end)
         if not lessons:
             result = f"Упс, кажется у тебя нет пар c {to_message_format(date_start)} "
             result += f"по {to_message_format(date_end)}, "
             result += "но все же проверь информацию..."
-            return SingleMessage(message=result)
+            return [SingleMessage(message=result)]
         _build_message = sync_to_async(build_lessons_message)
         result = await _build_message(lessons, group, date_start, date_end)
-        return SingleMessage(message=result)
+        return [SingleMessage(message=result)]

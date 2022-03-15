@@ -20,7 +20,7 @@ class GetGroupsByLevelCommand(BaseCommand):
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
         keyboard = GroupsKeyboard(groups)
-        return SingleMessage(
+        return [SingleMessage(
             message="Выберите одну из групп",
             keyboard=keyboard
-        )
+        )]

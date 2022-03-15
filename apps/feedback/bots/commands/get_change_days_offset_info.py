@@ -20,10 +20,10 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
         msg += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
         layout: Iterable[Button] = await self.build_settings_keyboard_layout(self.profile)
         keyboard = SettingsKeyboard(layout)
-        return SingleMessage(
+        return [SingleMessage(
             message=msg,
             keyboard=keyboard
-        )
+        )]
 
     async def build_settings_keyboard_layout(self, profile: Profile) -> Iterable[Button]:
         result = []
