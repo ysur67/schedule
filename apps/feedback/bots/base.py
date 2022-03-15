@@ -14,5 +14,9 @@ class BaseBot(ABC):
         return
 
     @abstractmethod
-    async def send_message(self, message: Iterable[SingleMessage], user_id: int) -> None:
+    async def send_messages(self, messages: Iterable[SingleMessage], user_id: int) -> None:
+        return
+
+    @abstractmethod
+    async def send_message(self, message: SingleMessage, user_id: int) -> None:
         return

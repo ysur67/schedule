@@ -3,7 +3,7 @@ from datetime import date, datetime
 from typing import Union
 
 from apps.feedback.bots.base import BaseBot
-from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.base import SingleMessage
 from apps.feedback.bots.commands.utils import (build_lessons_message,
                                                get_note_message)
 from apps.feedback.bots.vk.bot import VkBot
@@ -35,7 +35,7 @@ def send_notifications_in_lesson_day() -> None:
         account = profile.get_accounts_in_messengers().first()
         asyncio.get_event_loop().run_until_complete(
             bot.send_message(
-                MultipleMessages([SingleMessage(note_message), SingleMessage(lessons_message)]),
+                [SingleMessage(note_message), SingleMessage(lessons_message)],
                 int(account.account_id)
             )
         )
