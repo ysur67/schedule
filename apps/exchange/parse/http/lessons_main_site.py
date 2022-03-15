@@ -1,7 +1,5 @@
 from datetime import date, datetime, time
-from typing import List, Optional
-
-from bs4 import BeautifulSoup
+from typing import Dict, List, Optional
 
 from apps.exchange.parse.utils import (get_date_from_string,
                                        get_time_range_from_string)
@@ -20,12 +18,21 @@ from apps.timetables.usecases.subject import (create_subject,
                                               get_subject_by_title)
 from apps.timetables.usecases.teacher import (create_teacher,
                                               get_teacher_by_name)
+from bs4 import BeautifulSoup
 
-from .base import BaseHttpParser
+from .base import BaseHttpParser, Counter
 
 
 class LessonsParser(BaseHttpParser):
     logging_name: str = "Main Site Parser"
+
+    def __init__(self, url: str, payload_data: Dict) -> None:
+        super().__init__(url, payload_data)
+        self.lessons_counter = Counter(name='lessons')
+        self.groups_counter = Counter(name='groups')
+        self.classrooms_counter = Counter(name='classrooms')
+        self.subject_counter = Counter(name='subjects')
+        self.teachers_counter = Counter(name='teachers')
 
     def on_set_up(self):
         super().on_set_up()
@@ -43,6 +50,16 @@ class LessonsParser(BaseHttpParser):
                 continue
             current_date = get_date_from_string(title.get_text())
             self.parse_table(table, current_date)
+        self.logger.info('Teachers created: %d', self.teachers_counter.created)
+        self.logger.info('Teachers found in local db: %d', self.teachers_counter.updated)
+        self.logger.info('Groups created: %d', self.groups_counter.created)
+        self.logger.info('Groups found in local db: %d', self.groups_counter.updated)
+        self.logger.info('Classrooms created: %d', self.classrooms_counter.created)
+        self.logger.info('Classrooms found in local db: %d', self.classrooms_counter.updated)
+        self.logger.info('Subjects created: %d', self.subject_counter.created)
+        self.logger.info('Subjects found in local db: %d', self.subject_counter.updated)
+        self.logger.info('Lessons created: %d', self.lessons_counter.created)
+        self.logger.info('Lessons found in local db: %d', self.lessons_counter.updated)
 
     def parse_table(self, table: BeautifulSoup, current_date: date) -> None:
         rows = table.find_all("tr")
@@ -104,10 +121,12 @@ class LessonsParser(BaseHttpParser):
         for title in groups_titles.split(","):
             group_obj = get_group_by_title(title)
             if group_obj:
+                self.groups_counter.append_updated()
                 self.log_operation(group_obj, "найдена")
                 result.append(group_obj)
                 continue
             group_obj = create_group(title=title)
+            self.groups_counter.append_created()
             self.log_operation(group_obj, "создана")
             result.append(group_obj)
         return result
@@ -118,9 +137,11 @@ class LessonsParser(BaseHttpParser):
             return self.logger.error("У записи не имеется аудитории!")
         result = get_classroom_by_name(title)
         if result:
+            self.classrooms_counter.append_updated()
             self.log_operation(result, "найдена")
             return result
         result = create_classroom(title=title)
+        self.classrooms_counter.append_created()
         self.log_operation(result, "создана")
         return result
 
@@ -129,8 +150,10 @@ class LessonsParser(BaseHttpParser):
         result = get_subject_by_title(title)
         if result:
             self.log_operation(result, "обновлена")
+            self.subject_counter.append_updated()
             return result
         result = create_subject(title=title)
+        self.subject_counter.append_created()
         self.log_operation(result, "создана")
         return result
 
@@ -139,8 +162,10 @@ class LessonsParser(BaseHttpParser):
         result = get_teacher_by_name(title)
         if result:
             self.log_operation(result, "найдена")
+            self.teachers_counter.append_updated()
             return result
         result = create_teacher(name=title)
+        self.teachers_counter.append_created()
         self.log_operation(result, "создана")
         return result
 
@@ -168,6 +193,7 @@ class LessonsParser(BaseHttpParser):
         ))
         if lesson:
             self.log_operation(lesson, "обновлена")
+            self.lessons_counter.append_updated()
             return lesson
         lesson = create_lesson(
             title=subject.title,
@@ -180,6 +206,7 @@ class LessonsParser(BaseHttpParser):
             subject=subject,
             classroom=classroom
         )
+        self.lessons_counter.append_created()
         self.log_operation(lesson, "создана")
         return lesson
 

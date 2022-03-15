@@ -1,4 +1,5 @@
 import enum
+from dataclasses import dataclass
 from typing import Dict, Optional, Type, TypeVar
 
 import requests
@@ -12,6 +13,24 @@ T = TypeVar("T", bound="BaseHttpParser")
 class RequestType(enum.Enum):
     GET = "get"
     POST = "post"
+
+
+@dataclass
+class Counter:
+    name: Optional[str] = None
+    updated: int = 0
+    created: int = 0
+
+    def append_created(self, amount: int = 1) -> int:
+        self.created += amount
+        return self.created
+
+    def append_updated(self, amount: int = 1) -> int:
+        self.updated += amount
+        return self.updated
+
+    def __str__(self) -> str:
+        return f"{self.name}\nCreated: {self.created}\nUpdated: {self.updated}."
 
 
 class BaseHttpParser(BaseParser):
