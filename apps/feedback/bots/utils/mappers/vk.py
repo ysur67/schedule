@@ -1,18 +1,18 @@
 from functools import singledispatchmethod
-from typing import Dict, List, Union
+from typing import Dict, Iterable, List, Union
 
-from asgiref.sync import sync_to_async
-
-from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.base import SingleMessage
 from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
+from asgiref.sync import sync_to_async
 
 
 class ToVkApiMapper(BaseMessengerMapper):
 
     @singledispatchmethod
     @classmethod
-    async def convert(cls, response: Union[SingleMessage, MultipleMessages]) -> Union[Dict, List[Dict]]:
-        raise NotImplementedError(f"There is no approach for type {type(response)}")
+    async def convert(cls, response: Iterable[SingleMessage]) -> Union[Dict, List[Dict]]:
+        raise NotImplementedError(
+            f"There is no approach for type {type(response)}")
 
     @convert.register(SingleMessage)
     @classmethod
@@ -35,7 +35,7 @@ class ToVkApiMapper(BaseMessengerMapper):
                 "keyboard": item
             } for item in keyboard_data]
 
-    @convert.register(MultipleMessages)
+    @convert.register(list)
     @classmethod
-    async def _(cls, response: MultipleMessages) -> Dict:
-        return [await cls.convert(item) for item in response.messages]
+    async def _(cls, response: 'list[SingleMessage]') -> Dict:
+        return [await cls.convert(item) for item in response]
