@@ -3,7 +3,8 @@ from typing import Any, Iterable, List, Union
 
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            KeyboardButton, ReplyKeyboardMarkup)
-from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
+from apps.feedback.bots.utils.const import (VK_MAX_BUTTONS_IN_KEYBOARD,
+                                            VK_MAX_ROWS_IN_KEYBOARD)
 from apps.timetables.models import Group
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet
@@ -19,7 +20,11 @@ class GroupsKeyboard(BaseKeyboard):
 
     def to_vk_api(self) -> Union[str, List[str]]:
         self.data: QuerySet[Group]
-        if self.data.count() > VK_MAX_BUTTONS_IN_KEYBOARD:
+        count = self.data.count()
+        rows = count / self.OFFSET
+        if self.has_cancel_button:
+            rows += 1
+        if (count > VK_MAX_BUTTONS_IN_KEYBOARD) or (rows >= VK_MAX_ROWS_IN_KEYBOARD):
             self.is_inline = True
             return self._build_multiple_vk_keyboards(self.data)
         return self._build_single_vk_keyboard(self.data)
@@ -28,7 +33,7 @@ class GroupsKeyboard(BaseKeyboard):
         result = Keyboard(inline=self.is_inline)
         for index, value in enumerate(groups):
             result.add(Text(value.title))
-            if (index + 1) % self.OFFSET == 0 and not self._is_last(index, groups):
+            if ((index + 1) % self.OFFSET == 0) and not self._is_last(index, groups):
                 result.row()
         if self.has_cancel_button:
             result.row()
