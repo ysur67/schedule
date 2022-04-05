@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Dict, Iterable
 
 from vkbottle.bot import Bot, Message
 
 
-class BaseVkBot(ABC):
+class VkBotMixin(ABC):
     bot: Bot
 
     @abstractmethod
-    def send_response(self, response: Any, message: Message) -> None:
+    async def send_response(self, response: Iterable[Dict], message: Message) -> None:
         pass

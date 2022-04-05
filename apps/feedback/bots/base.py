@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, Union
+from typing import Iterable
 
 from apps.feedback.bots.commands.base import SingleMessage
 

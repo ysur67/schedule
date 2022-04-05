@@ -1,12 +1,11 @@
-from vkbottle.bot import Message
-
 from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.show_id import ShowIDCommand
 from apps.feedback.bots.utils.mappers.vk import ToVkApiMapper
-from apps.feedback.bots.vk.base import BaseVkBot
+from apps.feedback.bots.vk.base import VkBotMixin
+from vkbottle.bot import Message
 
 
-def init_endpoints(app: BaseVkBot):
+def init_endpoints(app: VkBotMixin):
     @app.bot.on.message(text=["Привет", "Покажи мой ID"])
     async def echo(message: Message):
         result = await ShowIDCommand(user_id=message.peer_id).execute()

@@ -3,13 +3,12 @@ from typing import Any, Iterable, List, Union
 
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            KeyboardButton, ReplyKeyboardMarkup)
+from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
+from apps.timetables.models import Group
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet
 from vkbottle import Keyboard, Text
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
-
-from apps.feedback.bots.utils.const import VK_MAX_BUTTONS_IN_KEYBOARD
-from apps.timetables.models import Group
 
 from .base import BaseKeyboard
 
@@ -39,9 +38,12 @@ class GroupsKeyboard(BaseKeyboard):
     def _build_multiple_vk_keyboards(self, groups: QuerySet[Group]) -> Iterable[str]:
         paginator = Paginator(groups.order_by("id"), self.ITEMS_PER_PAGE)
         result: List[str] = []
+        self.has_cancel_button = False
         for index in paginator.page_range:
             page = paginator.page(index)
             result.append(self._build_single_vk_keyboard(page.object_list))
+            if index == paginator.num_pages - 1:
+                self.has_cancel_button = True
         return result
 
     def to_telegram_api(self) -> Union[ReplyKeyboardMarkup, List[InlineKeyboardMarkup]]:
@@ -55,14 +57,17 @@ class GroupsKeyboard(BaseKeyboard):
         result: List[InlineKeyboardMarkup] = []
         for index in paginator.page_range:
             page = paginator.page(index)
-            result.append(self._build_single_telegram_keyboard(page.object_list))
+            result.append(
+                self._build_single_telegram_keyboard(page.object_list))
         return result
 
     def _build_single_telegram_keyboard(self, groups: QuerySet[Group]) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
-        result = InlineKeyboardMarkup() if self.is_inline else ReplyKeyboardMarkup(resize_keyboard=True)
+        result = InlineKeyboardMarkup() if self.is_inline else ReplyKeyboardMarkup(
+            resize_keyboard=True)
         for index, value in enumerate(groups):
             title = value.title
-            button = InlineKeyboardButton(title, callback_data=title) if self.is_inline else KeyboardButton(title)
+            button = InlineKeyboardButton(
+                title, callback_data=title) if self.is_inline else KeyboardButton(title)
             result.add(button)
             if ((index + 1) % self.OFFSET == 0) and not self._is_last(index, groups):
                 result.row()

@@ -1,6 +1,3 @@
-from vkbottle.bot import Message
-from vkbottle.dispatch.rules.base import CommandRule
-
 from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
 from apps.feedback.bots.commands.get_change_days_offset_info import \
     GetChangeDaysOffsetInfoCommand
@@ -14,12 +11,14 @@ from apps.feedback.bots.commands.turn_off_notifications import \
 from apps.feedback.bots.commands.turn_on_notifications import \
     TurnOnNotificationsCommand
 from apps.feedback.bots.utils.mappers.vk import ToVkApiMapper
-from apps.feedback.bots.vk.base import BaseVkBot
+from apps.feedback.bots.vk.base import VkBotMixin
 from apps.feedback.bots.vk.rules.group_rule import GroupExistRule
 from apps.feedback.bots.vk.states import UserStates
+from vkbottle.bot import Message
+from vkbottle.dispatch.rules.base import CommandRule
 
 
-def init_endpoints(app: BaseVkBot):
+def init_endpoints(app: VkBotMixin):
     @app.bot.on.message(GroupExistRule(), state=UserStates.CHOOSE_GROUP_STATE)
     async def save_current_group(message: Message):
         result = await SaveCurrentGroupCommand(
