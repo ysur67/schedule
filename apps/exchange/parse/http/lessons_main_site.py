@@ -51,15 +51,21 @@ class LessonsParser(BaseHttpParser):
             current_date = get_date_from_string(title.get_text())
             self.parse_table(table, current_date)
         self.logger.info('Teachers created: %d', self.teachers_counter.created)
-        self.logger.info('Teachers found in local db: %d', self.teachers_counter.updated)
+        self.logger.info('Teachers found in local db: %d',
+                         self.teachers_counter.updated)
         self.logger.info('Groups created: %d', self.groups_counter.created)
-        self.logger.info('Groups found in local db: %d', self.groups_counter.updated)
-        self.logger.info('Classrooms created: %d', self.classrooms_counter.created)
-        self.logger.info('Classrooms found in local db: %d', self.classrooms_counter.updated)
+        self.logger.info('Groups found in local db: %d',
+                         self.groups_counter.updated)
+        self.logger.info('Classrooms created: %d',
+                         self.classrooms_counter.created)
+        self.logger.info('Classrooms found in local db: %d',
+                         self.classrooms_counter.updated)
         self.logger.info('Subjects created: %d', self.subject_counter.created)
-        self.logger.info('Subjects found in local db: %d', self.subject_counter.updated)
+        self.logger.info('Subjects found in local db: %d',
+                         self.subject_counter.updated)
         self.logger.info('Lessons created: %d', self.lessons_counter.created)
-        self.logger.info('Lessons found in local db: %d', self.lessons_counter.updated)
+        self.logger.info('Lessons found in local db: %d',
+                         self.lessons_counter.updated)
 
     def parse_table(self, table: BeautifulSoup, current_date: date) -> None:
         rows = table.find_all("tr")
@@ -88,7 +94,8 @@ class LessonsParser(BaseHttpParser):
             if index == 0:
                 groups = self.parse_groups(cell)
             elif index == 1:
-                time_start, time_end = get_time_range_from_string(cell.get_text())
+                time_start, time_end = get_time_range_from_string(
+                    cell.get_text())
             elif index == 2:
                 classroom = self.parse_classroom(cell)
             elif index == 3:
@@ -182,7 +189,7 @@ class LessonsParser(BaseHttpParser):
         subject: Subject,
         teacher: Teacher,
         note: str
-        ) -> Lesson:
+    ) -> Lesson:
         lesson = get_lesson_by_params(AllFieldsParam(
             group=group,
             time_start=time_start,

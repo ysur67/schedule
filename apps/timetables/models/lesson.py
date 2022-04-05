@@ -1,7 +1,6 @@
-from django.db import models
-
 from apps.main.models import BaseModel
 from apps.timetables.models import Classroom, Group, Subject, Teacher
+from django.db import models
 
 
 class Lesson(BaseModel):
@@ -28,6 +27,11 @@ class Lesson(BaseModel):
     subject = models.ForeignKey(
         Subject, on_delete=models.SET_NULL, related_name="lessons",
         null=True, verbose_name="Дисциплина"
+    )
+    href = models.CharField(
+        max_length=1000,
+        null=True, blank=True,
+        verbose_name='Ссылка'
     )
 
     class Meta:
