@@ -28,9 +28,9 @@ class ToVkApiMapper(BaseMessengerMapper):
                 result.append({
                     'message': item.message,
                 })
-                for elem in keyboard_data:
+                for index, elem in enumerate(keyboard_data):
                     result.append({
-                        'message': '.',
+                        'message': f'{index + 1}.',
                         'keyboard': elem
                     })
         return result
