@@ -37,4 +37,4 @@ class GetScheduleCommand(CommandWithProfile):
             return [SingleMessage(message=result)]
         _build_message = sync_to_async(build_lessons_message)
         result = await _build_message(lessons, group, date_start, date_end)
-        return [SingleMessage(message=result)]
+        return [SingleMessage(message=item) for item in result]
