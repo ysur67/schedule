@@ -2,13 +2,12 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message
-
 from apps.feedback.bots.commands.educational_levels import \
     EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import \
     GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
-from apps.feedback.bots.telegram.base import BaseTelegramBot
+from apps.feedback.bots.telegram.base import TelegramBotMixin
 from apps.feedback.bots.telegram.filters.educational_level_exist import \
     EducationalLevelExistFilter
 from apps.feedback.bots.telegram.states import UserStates
@@ -16,10 +15,11 @@ from apps.feedback.bots.utils.const import Messengers
 from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 
 
-def init_endpoints(app: BaseTelegramBot):
+def init_endpoints(app: TelegramBotMixin):
 
     @app.dp.message_handler(
-        Text(equals=["Уровень", "Выбор группы", "Выбрать группу"], ignore_case=True),
+        Text(equals=["Уровень", "Выбор группы",
+             "Выбрать группу"], ignore_case=True),
         state="*"
     )
     async def get_educational_levels(message: Message):

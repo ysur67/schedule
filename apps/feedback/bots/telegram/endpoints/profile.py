@@ -1,6 +1,5 @@
 from aiogram.dispatcher.filters import Text
 from aiogram.types import CallbackQuery, Message
-
 from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
 from apps.feedback.bots.commands.get_change_days_offset_info import \
     GetChangeDaysOffsetInfoCommand
@@ -13,14 +12,14 @@ from apps.feedback.bots.commands.turn_off_notifications import \
     TurnOffNotificationsCommand
 from apps.feedback.bots.commands.turn_on_notifications import \
     TurnOnNotificationsCommand
-from apps.feedback.bots.telegram.base import BaseTelegramBot
+from apps.feedback.bots.telegram.base import TelegramBotMixin
 from apps.feedback.bots.telegram.filters.group_exist import GroupExistFilter
 from apps.feedback.bots.telegram.states import UserStates
 from apps.feedback.bots.utils.const import Messengers
 from apps.feedback.bots.utils.mappers.telegram import ToTelegramApiMapper
 
 
-def init_endpoints(app: BaseTelegramBot):
+def init_endpoints(app: TelegramBotMixin):
     @app.dp.callback_query_handler(
         GroupExistFilter(),
         state=UserStates.CHOOSE_GROUP_STATE
@@ -35,7 +34,7 @@ def init_endpoints(app: BaseTelegramBot):
         state = app.dp.current_state(user=user.id)
         await state.reset_state()
         await obj.answer(text="Выбор успешно сохранен")
-        await app.send_message(await ToTelegramApiMapper.convert(result), user.id)
+        await app.send_messages(await ToTelegramApiMapper.convert(result), user.id)
 
     @app.dp.message_handler(
         GroupExistFilter(),
