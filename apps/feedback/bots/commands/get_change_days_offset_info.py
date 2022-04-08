@@ -5,12 +5,12 @@ from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile
 
-from .base import CommandWithProfile, MultipleMessages, SingleMessage
+from .base import CommandWithProfile, SingleMessage
 
 
 class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
 
-    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
+    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
         msg = "Здесь ты можешь изменить кол-во дней, "
         msg += "на которое я буду показывать тебе расписание\n\n"
         msg += "Ты можешь выбрать из предложенных в клавиатуре вариантов "
@@ -20,10 +20,10 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
         msg += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
         layout: Iterable[Button] = await self.build_settings_keyboard_layout(self.profile)
         keyboard = SettingsKeyboard(layout)
-        return SingleMessage(
+        return [SingleMessage(
             message=msg,
             keyboard=keyboard
-        )
+        )]
 
     async def build_settings_keyboard_layout(self, profile: Profile) -> Iterable[Button]:
         result = []

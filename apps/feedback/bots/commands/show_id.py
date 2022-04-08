@@ -1,6 +1,6 @@
-from typing import Union
+from typing import Iterable, Union
 
-from .base import BaseCommand, MultipleMessages, SingleMessage
+from .base import BaseCommand, SingleMessage
 
 
 class ShowIDCommand(BaseCommand):
@@ -9,8 +9,8 @@ class ShowIDCommand(BaseCommand):
     def user_id(self) -> str:
         return self._require_field("user_id")
 
-    async def _execute_for_messengers(self) -> Union[SingleMessage, MultipleMessages]:
-        return MultipleMessages([
+    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+        return [
             SingleMessage("Привет!\nТвой идентификатор"),
             SingleMessage(str(self.user_id))
-        ])
+        ]

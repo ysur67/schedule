@@ -1,21 +1,20 @@
 from datetime import datetime
 
-from asgiref.sync import sync_to_async
-from vkbottle.bot import Message
-
 from apps.feedback.bots.commands.educational_levels import \
     EducationalLevelsCommand
 from apps.feedback.bots.commands.get_groups_by_level_command import \
     GetGroupsByLevelCommand
 from apps.feedback.bots.commands.get_schedule import GetScheduleCommand
 from apps.feedback.bots.utils.mappers.vk import ToVkApiMapper
-from apps.feedback.bots.vk.base import BaseVkBot
+from apps.feedback.bots.vk.base import VkBotMixin
 from apps.feedback.bots.vk.rules.educational_level_rule import \
     EducationalLevelExistRule
 from apps.feedback.bots.vk.states import UserStates
+from asgiref.sync import sync_to_async
+from vkbottle.bot import Message
 
 
-def init_endpoints(app: BaseVkBot):
+def init_endpoints(app: VkBotMixin):
 
     @app.bot.on.message(text=["Уровень", "Выбор группы", "Выбрать группу"])
     async def get_educational_levels(message: Message):

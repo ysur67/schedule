@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Iterable
 
-from apps.feedback.bots.commands.base import MultipleMessages, SingleMessage
+from apps.feedback.bots.commands.base import SingleMessage
 
 
 class BaseBot(ABC):
@@ -14,5 +14,9 @@ class BaseBot(ABC):
         return
 
     @abstractmethod
-    async def send_message(self, message: Union[SingleMessage, MultipleMessages], user_id: int) -> None:
+    async def send_messages(self, messages: Iterable[SingleMessage], user_id: int) -> None:
+        return
+
+    @abstractmethod
+    async def send_message(self, message: SingleMessage, user_id: int) -> None:
         return
