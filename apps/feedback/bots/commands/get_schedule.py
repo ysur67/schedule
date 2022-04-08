@@ -25,7 +25,7 @@ class GetScheduleCommand(CommandWithProfile):
         if not group:
             result = "У тебя не выбрана группа.\n"
             result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
-            return SingleMessage(message=result)
+            return [SingleMessage(message=result)]
         date_start = self.date_start
         date_end = self.date_end or date_start + \
             timedelta(days=self.profile.days_offset)
