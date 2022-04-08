@@ -46,7 +46,7 @@ def build_lessons_message(
 
 def build_lessons_message_by_date(date_: date, lessons: Iterable[Lesson]) -> str:
     result = ''
-    result += f"{get_day_of_week(date_).capitalize()} {to_message_format(date_)}\n"
+    result += f"{get_day_of_week(date_).capitalize()} {to_message_format(date_)}\n\n"
     for index, lesson in enumerate(lessons):
         result += f"{index + 1}. {lesson.subject.title}\n"
         result += f"\t🕐 {to_message_format(lesson.time_start)} - {to_message_format(lesson.time_end)}\n"
