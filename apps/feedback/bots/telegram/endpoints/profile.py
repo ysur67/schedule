@@ -34,7 +34,7 @@ def init_endpoints(app: TelegramBotMixin):
         state = app.dp.current_state(user=user.id)
         await state.reset_state()
         await obj.answer(text="Выбор успешно сохранен")
-        await app.send_message(await ToTelegramApiMapper.convert(result), user.id)
+        await app.send_messages(await ToTelegramApiMapper.convert(result), user.id)
 
     @app.dp.message_handler(
         GroupExistFilter(),

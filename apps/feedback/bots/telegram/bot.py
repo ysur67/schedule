@@ -38,8 +38,8 @@ class TelegramBot(BaseBot, TelegramBotMixin):
     async def send_response(self, response: List[Dict], message: Message) -> None:
         return [await message.answer(**item) for item in response]
 
-    async def send_message(self, message: SingleMessage, user_id: int) -> None:
-        return await self.bot.send_message(chat_id=user_id, **message.to_dict())
+    async def send_message(self, message: Dict, user_id: int) -> None:
+        return await self.bot.send_message(chat_id=user_id, **message)
 
-    async def send_messages(self, message: Iterable[SingleMessage], user_id: int) -> None:
-        return [await self.bot.send_message(user_id=user_id, message=item) for item in message]
+    async def send_messages(self, messages: Iterable[Dict], user_id: int) -> None:
+        return [await self.send_message(user_id=user_id, message=item) for item in messages]
