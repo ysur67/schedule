@@ -1,6 +1,8 @@
+import re
 from datetime import date, datetime, time
-from typing import Tuple
+from typing import Optional, Tuple
 
+from apps.timetables.models.subject import Subject
 from bs4 import BeautifulSoup
 
 
@@ -74,3 +76,8 @@ def get_date_from_string(string: str) -> date:
 
 def has_selected_attribute(tag: BeautifulSoup) -> bool:
     return tag.has_attr("selected")
+
+
+def get_url_from_string(value: str) -> Optional[str]:
+    values = re.findall(r'(https?://\S+)', value)
+    return values[0] if values else None

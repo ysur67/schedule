@@ -1,8 +1,10 @@
 from datetime import date, datetime, time
+from socket import herror
 from typing import Dict, List, Optional
 
 from apps.exchange.parse.utils import (get_date_from_string,
-                                       get_time_range_from_string)
+                                       get_time_range_from_string,
+                                       get_url_from_string)
 from apps.main.models.mixins import LoggingMixin
 from apps.timetables.models import Lesson
 from apps.timetables.models.classroom import Classroom
@@ -99,7 +101,7 @@ class LessonsParser(BaseHttpParser):
             elif index == 2:
                 classroom = self.parse_classroom(cell)
             elif index == 3:
-                subject = self.parse_subject(cell)
+                subject, href = self.parse_subject(cell)
             elif index == 4:
                 teacher = self.parse_teacher(cell)
             elif index == 5:
@@ -114,7 +116,8 @@ class LessonsParser(BaseHttpParser):
                 classroom=classroom,
                 subject=subject,
                 teacher=teacher,
-                note=note
+                note=note,
+                href=href
             )
             result.append(lesson)
         return result
@@ -152,17 +155,21 @@ class LessonsParser(BaseHttpParser):
         self.log_operation(result, "создана")
         return result
 
-    def parse_subject(self, subject: BeautifulSoup) -> Subject:
+    def parse_subject(self, subject: BeautifulSoup) -> 'tuple[Subject, Optional[str]]':
         title = self.get_title(subject)
+        href = get_url_from_string(title)
+        if href is not None:
+            title = title.replace(href, '')
+            title = title.strip()
         result = get_subject_by_title(title)
         if result:
             self.log_operation(result, "обновлена")
             self.subject_counter.append_updated()
-            return result
+            return result, href
         result = create_subject(title=title)
         self.subject_counter.append_created()
         self.log_operation(result, "создана")
-        return result
+        return result, href
 
     def parse_teacher(self, teacher: BeautifulSoup) -> Teacher:
         title = self.get_title(teacher)
@@ -188,7 +195,8 @@ class LessonsParser(BaseHttpParser):
         classroom: Classroom,
         subject: Subject,
         teacher: Teacher,
-        note: str
+        note: str,
+        href: str = None
     ) -> Lesson:
         lesson = get_lesson_by_params(AllFieldsParam(
             group=group,
@@ -199,6 +207,8 @@ class LessonsParser(BaseHttpParser):
             teacher=teacher,
         ))
         if lesson:
+            lesson.href = href
+            lesson.save()
             self.log_operation(lesson, "обновлена")
             self.lessons_counter.append_updated()
             return lesson
@@ -211,7 +221,8 @@ class LessonsParser(BaseHttpParser):
             teacher=teacher,
             note=note,
             subject=subject,
-            classroom=classroom
+            classroom=classroom,
+            href=href,
         )
         self.lessons_counter.append_created()
         self.log_operation(lesson, "создана")

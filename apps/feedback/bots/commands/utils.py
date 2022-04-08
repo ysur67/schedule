@@ -41,6 +41,8 @@ def build_lessons_message(lessons_by_date: Dict[date, List[Lesson]], group: Grou
             result += f"\t👤 {lesson.teacher.name}\n"
             if lesson.classroom:
                 result += f"\t🏛 {lesson.classroom.title}\n"
+            if lesson.href:
+                result += f"\tСсылка: {lesson.href}\n"
             result += f"\tПримечание: {lesson.note}\n"
         result += "\n"
     return result
