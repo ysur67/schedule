@@ -1,3 +1,4 @@
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import CallbackQuery, Message
 from apps.feedback.bots.commands.change_days_offset import SetDaysOffsetCommand
@@ -5,6 +6,7 @@ from apps.feedback.bots.commands.get_change_days_offset_info import \
     GetChangeDaysOffsetInfoCommand
 from apps.feedback.bots.commands.get_current_status import \
     GetCurrentStatusCommand
+from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import \
     SaveCurrentGroupCommand
@@ -24,7 +26,7 @@ def init_endpoints(app: TelegramBotMixin):
         GroupExistFilter(),
         state=UserStates.CHOOSE_GROUP_STATE
     )
-    async def save_current_group_from_callback(obj: CallbackQuery):
+    async def save_current_group_from_callback(obj: CallbackQuery, state: FSMContext):
         user = obj.from_user
         result = await SaveCurrentGroupCommand(
             messenger=Messengers.TELEGRAM,
@@ -32,9 +34,13 @@ def init_endpoints(app: TelegramBotMixin):
             account_id=user.id
         ).execute()
         state = app.dp.current_state(user=user.id)
-        await state.reset_state()
         await obj.answer(text="Выбор успешно сохранен")
         await app.send_messages(await ToTelegramApiMapper.convert(result), user.id)
+        async with state.proxy() as data:
+            ids = data.get('messages', [])
+            for item in ids:
+                await app.bot.delete_message(data.get('chat_id', 0), item)
+        await state.reset_state()
 
     @app.dp.message_handler(
         GroupExistFilter(),
@@ -50,6 +56,22 @@ def init_endpoints(app: TelegramBotMixin):
         state = app.dp.current_state(user=user.id)
         await state.reset_state()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)
+
+    @app.dp.callback_query_handler(
+        Text(equals=['Главное меню', 'Начать'], ignore_case=True),
+        state=UserStates.CHOOSE_GROUP_STATE
+    )
+    async def switch_to_main_menu(obj: CallbackQuery, state: FSMContext):
+        user = obj.from_user
+        result = await GetMainMenuCommand(messenger=Messengers.TELEGRAM).execute()
+        state = app.dp.current_state(user=user.id)
+        await obj.answer(text="Отмена выбора группы...")
+        await app.send_messages(await ToTelegramApiMapper.convert(result), user.id)
+        async with state.proxy() as data:
+            ids = data.get('messages', [])
+            for item in ids:
+                await app.bot.delete_message(data.get('chat_id', 0), item)
+        await state.reset_state()
 
     @app.dp.message_handler(Text(equals=["статус"], ignore_case=True), state="*")
     async def get_current_profile_status(message: Message):

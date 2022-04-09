@@ -38,7 +38,7 @@ class TelegramBot(BaseBot, TelegramBotMixin):
     def listen(self) -> None:
         executor.start_polling(self.dp, skip_updates=True)
 
-    async def send_response(self, response: List[Dict], message: Message) -> None:
+    async def send_response(self, response: List[Dict], message: Message) -> List[Message]:
         return [await message.answer(**item) for item in response]
 
     async def send_message(self, message: Dict, user_id: int) -> None:

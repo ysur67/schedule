@@ -3,6 +3,7 @@ from apps.feedback.bots.commands.get_change_days_offset_info import \
     GetChangeDaysOffsetInfoCommand
 from apps.feedback.bots.commands.get_current_status import \
     GetCurrentStatusCommand
+from apps.feedback.bots.commands.get_main_menu import GetMainMenuCommand
 from apps.feedback.bots.commands.get_settings import GetSettingsCommand
 from apps.feedback.bots.commands.save_current_group_to_user import \
     SaveCurrentGroupCommand
@@ -25,6 +26,19 @@ def init_endpoints(app: VkBotMixin):
             group=message.text,
             account_id=message.peer_id
         ).execute()
+        inline_messages = message.state_peer.payload.get('messages')
+        await app.bot.api.messages.delete(inline_messages, delete_for_all=True)
+        await app.bot.state_dispenser.delete(message.peer_id)
+        await app.send_response(await ToVkApiMapper.convert(result), message)
+
+    @app.bot.on.message(
+        text=['Главное меню', 'Начать'],
+        state=UserStates.CHOOSE_GROUP_STATE
+    )
+    async def switch_to_main_menu(message: Message):
+        result = await GetMainMenuCommand().execute()
+        inline_messages = message.state_peer.payload.get('messages')
+        await app.bot.api.messages.delete(inline_messages, delete_for_all=True)
         await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(await ToVkApiMapper.convert(result), message)
 
