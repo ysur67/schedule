@@ -14,6 +14,12 @@ def init_endpoints(app: VkBotMixin):
     @app.bot.on.message(text=["Начать", "Главное меню"])
     async def get_main_menu(message: Message):
         result = await GetMainMenuCommand().execute()
+        inline_messages = message.state_peer.payload.get('messages', None)
+        if inline_messages:
+            await app.bot.api.messages.delete(
+                message_ids=inline_messages,
+                delete_for_all=True
+            )
         # TODO: custom state dispenser
         try:
             await app.bot.state_dispenser.delete(message.peer_id)

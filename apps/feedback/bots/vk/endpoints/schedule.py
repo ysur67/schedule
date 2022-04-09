@@ -25,7 +25,12 @@ def init_endpoints(app: VkBotMixin):
     @app.bot.on.message(EducationalLevelExistRule())
     async def get_groups(message: Message):
         result = await GetGroupsByLevelCommand(message=message.text).execute()
-        await app.send_response(await ToVkApiMapper.convert(result), message)
+        messages = await app.send_response(await ToVkApiMapper.convert(result), message)
+        await app.bot.state_dispenser.set(
+            message.peer_id,
+            UserStates.CHOOSE_GROUP_STATE,
+            messages=messages
+        )
 
     @app.bot.on.message(text="Показать расписание")
     async def show_schedule(message: Message):

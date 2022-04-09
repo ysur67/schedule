@@ -8,5 +8,5 @@ class VkBotMixin(ABC):
     bot: Bot
 
     @abstractmethod
-    async def send_response(self, response: Iterable[Dict], message: Message) -> None:
+    async def send_response(self, response: Iterable[Dict], message: Message) -> Iterable[int]:
         pass
