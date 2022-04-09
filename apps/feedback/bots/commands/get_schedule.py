@@ -31,7 +31,7 @@ class GetScheduleCommand(CommandWithProfile):
             timedelta(days=self.profile.days_offset)
         lessons = await sync_to_async(get_lessons_dict_by_group_and_date_range)(group, date_start, date_end)
         if not lessons:
-            result = f"Упс, кажется у тебя нет пар c {to_message_format(date_start)} "
+            result = f"Кажется у тебя нет пар c {to_message_format(date_start)} "
             result += f"по {to_message_format(date_end)}, "
             result += "но все же проверь информацию..."
             return [SingleMessage(message=result)]
