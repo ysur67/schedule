@@ -1,5 +1,7 @@
 from datetime import datetime
+from typing import List
 
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message
 from apps.feedback.bots.commands.educational_levels import \
@@ -32,9 +34,15 @@ def init_endpoints(app: TelegramBotMixin):
     async def get_groups(message: Message):
         result = await GetGroupsByLevelCommand(message=message.text).execute()
         user = message.from_user
+        result: List[Message] = await app.send_response(
+            await ToTelegramApiMapper.convert(result), message
+        )
         state = app.dp.current_state(user=user.id)
         await state.set_state(UserStates.CHOOSE_GROUP_STATE)
-        await app.send_response(await ToTelegramApiMapper.convert(result), message)
+        await state.update_data(
+            messages=[item.message_id for item in result],
+            chat_id=message.chat.id
+        )
 
     @app.dp.message_handler(
         Text(equals=["Показать расписание"], ignore_case=True),

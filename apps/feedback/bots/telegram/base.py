@@ -10,5 +10,5 @@ class TelegramBotMixin(ABC):
     dp: Dispatcher
 
     @abstractmethod
-    async def send_response(self, response: List[Dict], message: Message) -> None:
+    async def send_response(self, response: List[Dict], message: Message) -> List[Message]:
         pass
