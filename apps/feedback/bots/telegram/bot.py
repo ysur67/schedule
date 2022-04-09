@@ -1,3 +1,4 @@
+import logging
 from functools import singledispatchmethod
 from typing import Any, Dict, Iterable, List, Union
 
@@ -12,6 +13,8 @@ from apps.feedback.bots.telegram.filters import (EducationalLevelExistFilter,
 from apps.feedback.bots.telegram.middlewares import CreateAccountMiddleware
 
 from .base import TelegramBotMixin
+
+logging.basicConfig(level=logging.INFO)
 
 
 class TelegramBot(BaseBot, TelegramBotMixin):

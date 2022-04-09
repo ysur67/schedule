@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from functools import singledispatchmethod
 from typing import Dict, Iterable, List, Union
@@ -9,6 +10,8 @@ from apps.feedback.bots.vk.base import VkBotMixin
 from apps.feedback.bots.vk.middlewares.create_account import \
     CreateAccountMiddleware
 from vkbottle.bot import Bot, Message
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class VkBot(BaseBot, VkBotMixin):
