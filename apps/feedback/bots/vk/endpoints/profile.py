@@ -37,8 +37,10 @@ def init_endpoints(app: VkBotMixin):
     )
     async def switch_to_main_menu(message: Message):
         result = await GetMainMenuCommand().execute()
-        inline_messages = message.state_peer.payload.get('messages')
-        await app.bot.api.messages.delete(inline_messages, delete_for_all=True)
+        state_peer = message.state_peer
+        if state_peer is not None:
+            inline_messages = message.state_peer.payload.get('messages')
+            await app.bot.api.messages.delete(inline_messages, delete_for_all=True)
         await app.bot.state_dispenser.delete(message.peer_id)
         await app.send_response(await ToVkApiMapper.convert(result), message)
 
