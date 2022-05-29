@@ -4,6 +4,7 @@ from typing import Any, Dict, Iterable, Optional
 
 from apps.feedback.bots.utils.const import Messengers
 from apps.feedback.bots.utils.keyboard.base import BaseKeyboard
+from apps.feedback.models import MessengerModel, Profile
 from apps.feedback.usecases.messenger import get_messenger_by_code
 from apps.feedback.usecases.profile import \
     get_profile_by_messenger_and_account_id
@@ -53,6 +54,8 @@ class BaseCommand(ABC):
 
 
 class CommandWithProfile(BaseCommand):
+    profile: Profile
+    messenger: MessengerModel
 
     @property
     def account_id(self) -> str:

@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable
 
 from apps.feedback.bots.utils.keyboard.base import Button
 from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
