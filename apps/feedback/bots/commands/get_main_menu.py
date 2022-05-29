@@ -8,7 +8,7 @@ from .base import BaseCommand, SingleMessage
 
 class GetMainMenuCommand(BaseCommand):
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
         return [SingleMessage(
             message="Выберите один из пунктов меню",

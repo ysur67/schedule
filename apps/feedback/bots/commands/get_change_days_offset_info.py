@@ -10,7 +10,7 @@ from .base import CommandWithProfile, SingleMessage
 
 class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         msg = "Здесь ты можешь изменить кол-во дней, "
         msg += "на которое я буду показывать тебе расписание\n\n"
         msg += "Ты можешь выбрать из предложенных в клавиатуре вариантов "

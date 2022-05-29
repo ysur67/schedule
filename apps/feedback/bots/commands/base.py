@@ -32,11 +32,11 @@ class BaseCommand(ABC):
     async def execute(self) -> Iterable[SingleMessage]:
         await self.pre_execute()
         if self.type in (Messengers.VK, Messengers.TELEGRAM):
-            return await self._execute_for_messengers()
+            return await self._execute()
         raise NotImplementedError(f"There is no approach for type {self.type}")
 
     @abstractmethod
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         pass
 
     async def pre_execute(self) -> None:
@@ -47,7 +47,8 @@ class BaseCommand(ABC):
         if result is not None:
             return result
         if raise_exception:
-            raise ValueError(f"You should provide {key} kwarg for this command")
+            raise ValueError(
+                f"You should provide {key} kwarg for this command")
         return result
 
 

@@ -20,7 +20,7 @@ class GetScheduleCommand(CommandWithProfile):
     def date_end(self) -> date:
         return self._require_field("date_end", raise_exception=False)
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         group = await sync_to_async(self.profile.get_group)()
         if not group:
             result = "У тебя не выбрана группа.\n"

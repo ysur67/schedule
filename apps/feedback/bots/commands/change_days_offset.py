@@ -14,7 +14,7 @@ class SetDaysOffsetCommand(CommandWithProfile):
     def new_days_offset(self) -> int:
         return self._require_field("days_offset")
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
         try:
             offset = int(self.new_days_offset)

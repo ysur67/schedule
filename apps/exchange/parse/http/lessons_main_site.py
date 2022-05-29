@@ -171,8 +171,14 @@ class LessonsParser(BaseHttpParser):
         self.log_operation(result, "создана")
         return result, href
 
-    def parse_teacher(self, teacher: BeautifulSoup) -> Teacher:
-        title = self.get_title(teacher)
+    def parse_teacher(self, teacher: BeautifulSoup) -> Optional[Teacher]:
+        title = self.get_title(teacher, raise_exception=False)
+        if title is None:
+            self.logger.error(
+                "The teacher didn't have name %s, setting default name...",
+                teacher
+            )
+            title = "NO DATA"
         result = get_teacher_by_name(title)
         if result:
             self.log_operation(result, "найдена")

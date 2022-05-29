@@ -9,6 +9,6 @@ from .base import BaseCommand, SingleMessage
 
 class EducationalLevelsCommand(BaseCommand):
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         keyboard = EducationalLevelsKeyboard(get_all_educational_levels())
         return [SingleMessage(message="Выберите один из пунктов меню", keyboard=keyboard)]
