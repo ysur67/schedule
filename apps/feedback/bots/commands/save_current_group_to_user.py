@@ -14,7 +14,7 @@ class SaveCurrentGroupCommand(CommandWithProfile):
     def group(self) -> str:
         return self._require_field("group")
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         group = await sync_to_async(get_group_by_title)(self.group)
         await sync_to_async(self.profile.set_group)(group)
         keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)

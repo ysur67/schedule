@@ -9,7 +9,7 @@ class ShowIDCommand(BaseCommand):
     def user_id(self) -> str:
         return self._require_field("user_id")
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         return [
             SingleMessage("Привет!\nТвой идентификатор"),
             SingleMessage(str(self.user_id))

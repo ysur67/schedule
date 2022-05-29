@@ -9,7 +9,7 @@ from .base import CommandWithProfile, SingleMessage
 
 class TurnOffNotificationsCommand(CommandWithProfile):
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
         if not self.profile.send_notifications:
             return [SingleMessage(

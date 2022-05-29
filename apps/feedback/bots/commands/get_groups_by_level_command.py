@@ -16,7 +16,7 @@ class GetGroupsByLevelCommand(BaseCommand):
     def message(self) -> str:
         return self._require_field("message")
 
-    async def _execute_for_messengers(self) -> Iterable[SingleMessage]:
+    async def _execute(self) -> Iterable[SingleMessage]:
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
         keyboard = GroupsKeyboard(groups)
