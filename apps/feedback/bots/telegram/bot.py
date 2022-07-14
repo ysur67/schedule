@@ -6,7 +6,6 @@ from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import Message
 from apps.feedback.bots import BaseBot
-from apps.feedback.bots.commands.base import SingleMessage
 from apps.feedback.bots.telegram.app import init_endpoints
 from apps.feedback.bots.telegram.filters import (EducationalLevelExistFilter,
                                                  GroupExistFilter)

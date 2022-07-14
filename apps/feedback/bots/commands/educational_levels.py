@@ -1,10 +1,11 @@
-from typing import Iterable, Union
+from typing import Iterable
 
 from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.timetables.usecases.educational_level import \
     get_all_educational_levels
 
-from .base import BaseCommand, SingleMessage
+from .base import BaseCommand
 
 
 class EducationalLevelsCommand(BaseCommand):

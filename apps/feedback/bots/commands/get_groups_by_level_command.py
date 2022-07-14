@@ -1,13 +1,13 @@
-from functools import singledispatchmethod
-from typing import Any, Dict, Iterable, List, Union
+from typing import Iterable
 
 from apps.feedback.bots.utils.keyboard import GroupsKeyboard
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.timetables.usecases.educational_level import \
     get_educational_level_by_title
 from apps.timetables.usecases.group import get_groups_by_educational_level
 from asgiref.sync import sync_to_async
 
-from .base import BaseCommand, SingleMessage
+from .base import BaseCommand
 
 
 class GetGroupsByLevelCommand(BaseCommand):

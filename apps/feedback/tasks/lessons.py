@@ -3,9 +3,9 @@ from datetime import date, datetime
 from typing import Union
 
 from apps.feedback.bots.base import BaseBot
-from apps.feedback.bots.commands.base import SingleMessage
 from apps.feedback.bots.commands.utils import (build_lessons_message,
                                                get_note_message)
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.bots.vk.bot import VkBot
 from apps.feedback.models import Profile
 from apps.main.usecases import get_settings
@@ -14,6 +14,7 @@ from apps.timetables.usecases.lesson import get_lessons_by_profile_and_date
 from project.celery import app as celery_app
 
 
+# TODO: Починить
 @celery_app.task()
 def send_notifications_in_lesson_day() -> None:
     date_ = date.today()

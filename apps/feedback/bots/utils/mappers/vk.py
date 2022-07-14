@@ -1,8 +1,8 @@
 from typing import Dict, Iterable, List, Union
 
-from apps.feedback.bots.commands.base import SingleMessage
 from apps.feedback.bots.utils import keyboard
 from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
+from apps.feedback.bots.utils.response.message import SingleMessage
 from asgiref.sync import sync_to_async
 
 
