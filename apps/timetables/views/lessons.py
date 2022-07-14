@@ -5,5 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 class LessonViewSet(ModelViewSet):
     serializer_class = LessonSerializer
-    queryset = get_all_lessons() \
-        .select_related('group', 'teacher', 'classroom', 'subject')
+
+    def get_queryset(self):
+        return get_all_lessons() \
+            .select_related('group', 'teacher', 'classroom', 'subject')

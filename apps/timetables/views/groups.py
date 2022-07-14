@@ -14,7 +14,6 @@ from rest_framework.viewsets import ModelViewSet
 
 class EducationalLevelViewSet(ModelViewSet):
     serializer_class = EducationalLevelSerializer
-    queryset = get_all_educational_levels()
 
     @action(methods=["GET"], detail=True, url_path="groups")
     def get_groups_by_level_view(self, request: HttpRequest, pk=None) -> Response:
@@ -28,7 +27,12 @@ class EducationalLevelViewSet(ModelViewSet):
             return GroupSerializer(*args, **kwargs)
         return super().get_serializer(*args, **kwargs)
 
+    def get_queryset(self):
+        return get_all_educational_levels()
+
 
 class GroupsViewSet(ModelViewSet):
     serializer_class = GroupSerializer
-    queryset = get_all_groups()
+
+    def get_queryset(self):
+        return get_all_groups()
