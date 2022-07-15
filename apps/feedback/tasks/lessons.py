@@ -30,7 +30,7 @@ def send_notifications_in_lesson_day() -> None:
         note_message = get_note_message()
         lessons_message = build_lessons_message(
             lessons_by_date={date_: lessons},
-            group=profile.get_group(),
+            group=profile.current_group,
             date_start=date_
         )
         account = profile.get_accounts_in_messengers().first()

@@ -91,7 +91,7 @@ def get_lessons_dict_by_group_and_date_range(group: Group, start: date, end: dat
 
 
 def get_lessons_by_profile_and_date(profile: Profile, date_: date) -> QuerySet[Lesson]:
-    return Lesson.objects.filter(group=profile.get_group(), date=date_)
+    return Lesson.objects.filter(group=profile.current_group, date=date_)
 
 
 def get_all_lessons() -> QuerySet[Lesson]:

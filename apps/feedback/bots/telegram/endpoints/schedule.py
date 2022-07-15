@@ -51,7 +51,7 @@ def init_endpoints(app: TelegramBotMixin):
     async def show_schedule(message: Message):
         result = await GetScheduleCommand(
             messenger=Messengers.TELEGRAM,
-            date_start=datetime.now().date(),
+            date_start=datetime.strptime('01.01.2022', '%d.%m.%Y'),
             account_id=message.from_user.id
         ).execute()
         await app.send_response(await ToTelegramApiMapper.convert(result), message)

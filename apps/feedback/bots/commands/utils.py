@@ -8,7 +8,7 @@ from apps.timetables.models.group import Group
 
 
 def build_status_message(profile: Profile) -> str:
-    group = profile.get_group()
+    group = profile.current_group
     result = ""
     if group:
         result += f"Группа: {group.title}\n"

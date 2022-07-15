@@ -22,7 +22,7 @@ class GetScheduleCommand(CommandWithProfile):
         return self._require_field("date_end", raise_exception=False)
 
     async def _execute(self) -> Iterable[SingleMessage]:
-        group = await sync_to_async(self.profile.get_group)()
+        group = self.profile.current_group
         if not group:
             result = "У тебя не выбрана группа.\n"
             result += "Я не могу показать тебе расписание, если я не знаю твоей группы"
