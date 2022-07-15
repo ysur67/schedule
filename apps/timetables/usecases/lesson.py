@@ -1,6 +1,4 @@
 from datetime import date, time, timedelta
-from functools import singledispatch
-from multiprocessing.sharedctypes import Value
 from typing import Any, Dict, List, Optional
 
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
@@ -11,7 +9,6 @@ from apps.timetables.models.classroom import Classroom
 from apps.timetables.models.group import Group
 from apps.timetables.models.subject import Subject
 from apps.timetables.models.teacher import Teacher
-from apps.timetables.usecases.group import get_groups_that_have_lessons_in_date
 from django.db.models.query import QuerySet
 
 
@@ -47,31 +44,9 @@ class AllFieldsParam(GetLessonByDateAndClassroomParam):
         self.subject = subject
 
 
-@singledispatch
-def get_lesson_by_params(param: Any) -> Optional[Lesson]:
-    raise NotImplementedError(f"there is no approach for type {type(param)}")
-
-
-@get_lesson_by_params.register(GetLessonByDateAndClassroomParam)
-def _(param: GetLessonByDateAndClassroomParam) -> Optional[Lesson]:
-    return Lesson.objects.filter(
-        date=param.date,
-        time_start=param.time_start,
-        group=param.group,
-        classroom=param.classroom,
-        teacher=param.teacher
-    ).first()
-
-@get_lesson_by_params.register(AllFieldsParam)
-def _(param: AllFieldsParam) -> Optional[Lesson]:
-    return Lesson.objects.filter(
-        date=param.date,
-        time_start=param.time_start,
-        group=param.group,
-        classroom=param.classroom,
-        subject=param.subject,
-        teacher=param.teacher
-    ).first()
+def get_lesson_by_params(param: Dict[str, Any]) -> Optional[Lesson]:
+    qs = Lesson.objects.all()
+    return qs.filter(**param).first()
 
 
 def create_lesson(**options) -> Lesson:

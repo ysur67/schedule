@@ -14,8 +14,7 @@ from apps.timetables.models.teacher import Teacher
 from apps.timetables.usecases.classroom import (create_classroom,
                                                 get_classroom_by_name)
 from apps.timetables.usecases.group import create_group, get_group_by_title
-from apps.timetables.usecases.lesson import (AllFieldsParam, create_lesson,
-                                             get_lesson_by_params)
+from apps.timetables.usecases.lesson import create_lesson, get_lesson_by_params
 from apps.timetables.usecases.subject import (create_subject,
                                               get_subject_by_title)
 from apps.timetables.usecases.teacher import (create_teacher,
@@ -50,8 +49,8 @@ class LessonsParser(BaseHttpParser):
             if table.name != "table":
                 self.logger.error("Не была найдена таблица")
                 continue
-            current_date = get_date_from_string(title.get_text())
-            self.parse_table(table, current_date)
+            lesson_date = get_date_from_string(title.get_text())
+            self.parse_table(table, lesson_date)
         self.logger.info('Teachers created: %d', self.teachers_counter.created)
         self.logger.info('Teachers found in local db: %d',
                          self.teachers_counter.updated)
@@ -69,23 +68,23 @@ class LessonsParser(BaseHttpParser):
         self.logger.info('Lessons found in local db: %d',
                          self.lessons_counter.updated)
 
-    def parse_table(self, table: BeautifulSoup, current_date: date) -> None:
+    def parse_table(self, table: BeautifulSoup, lesson_date: date) -> None:
         rows = table.find_all("tr")
         if not rows:
             return self.logger.error("Таблица не содержит строк!")
         # Удаляем первую строку из таблицы - это хедер
         rows.pop(0)
-        _ = self.get_lesssons_from_rows(rows, current_date)
+        _ = self.get_lesssons_from_rows(rows, lesson_date)
 
-    def get_lesssons_from_rows(self, rows: BeautifulSoup, current_date: date) -> List[Lesson]:
+    def get_lesssons_from_rows(self, rows: BeautifulSoup, lesson_date: date) -> List[Lesson]:
         result = []
         for row in rows:
-            lesson = self.get_lessons_from_single_row(row, current_date)
+            lesson = self.get_lessons_from_single_row(row, lesson_date)
             if lesson:
                 result.append(lesson)
         return result
 
-    def get_lessons_from_single_row(self, row: BeautifulSoup, current_date: date) -> List[Lesson]:
+    def get_lessons_from_single_row(self, row: BeautifulSoup, lesson_date: date) -> List[Lesson]:
         tds = row.find_all("td")
         if not tds:
             return self.logger.error("Строка не содержит значений, пропуск...")
@@ -97,7 +96,8 @@ class LessonsParser(BaseHttpParser):
                 groups = self.parse_groups(cell)
             elif index == 1:
                 time_start, time_end = get_time_range_from_string(
-                    cell.get_text())
+                    cell.get_text()
+                )
             elif index == 2:
                 classroom = self.parse_classroom(cell)
             elif index == 3:
@@ -106,11 +106,13 @@ class LessonsParser(BaseHttpParser):
                 teacher = self.parse_teacher(cell)
             elif index == 5:
                 note = self.parse_note(cell)
+        if subject is None:
+            return None
         result = []
         for group in groups:
             lesson = self.parse_lesson(
                 group=group,
-                current_date=current_date,
+                lesson_date=lesson_date,
                 time_start=time_start,
                 time_end=time_end,
                 classroom=classroom,
@@ -156,7 +158,9 @@ class LessonsParser(BaseHttpParser):
         return result
 
     def parse_subject(self, subject: BeautifulSoup) -> 'tuple[Subject, Optional[str]]':
-        title = self.get_title(subject)
+        title = self.get_title(subject, raise_exception=False)
+        if title is None:
+            return None, None
         href = get_url_from_string(title)
         if href is not None:
             title = title.replace(href, '')
@@ -195,7 +199,7 @@ class LessonsParser(BaseHttpParser):
     def parse_lesson(
         self,
         group: Group,
-        current_date: date,
+        lesson_date: date,
         time_start: time,
         time_end: time,
         classroom: Classroom,
@@ -204,14 +208,14 @@ class LessonsParser(BaseHttpParser):
         note: str,
         href: str = None
     ) -> Lesson:
-        lesson = get_lesson_by_params(AllFieldsParam(
-            group=group,
-            time_start=time_start,
-            classroom=classroom,
-            lesson_date=current_date,
-            subject=subject,
-            teacher=teacher,
-        ))
+        lesson = get_lesson_by_params({
+            "group": group,
+            "time_start": time_start,
+            "classroom": classroom,
+            "date": lesson_date,
+            "subject": subject,
+            "teacher": teacher,
+        })
         if lesson:
             lesson.href = href
             lesson.save()
@@ -220,7 +224,7 @@ class LessonsParser(BaseHttpParser):
             return lesson
         lesson = create_lesson(
             title=subject.title,
-            date=current_date,
+            date=lesson_date,
             time_start=time_start,
             time_end=time_end,
             group=group,
