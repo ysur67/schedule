@@ -54,7 +54,7 @@ class GetGroupsByLevelCommand(BaseCommand):
             result.append(
                 SimpleKeyboard(
                     data=groups_to_buttons(page),
-                    has_cancel_button=index == paginator.num_pages - 1,
+                    has_cancel_button=index == paginator.num_pages,
                     is_inline=True,
                 )
             )
