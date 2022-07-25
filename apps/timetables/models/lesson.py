@@ -6,9 +6,13 @@ from django.db import models
 class Lesson(BaseModel):
     """Модель для описания занятия/пары."""
     date = models.DateField(verbose_name="Дата занятия")
-    time_start = models.TimeField(verbose_name="Время начала", null=True)
+    time_start = models.TimeField(
+        verbose_name="Время начала",
+        null=True, blank=True
+    )
     time_end = models.TimeField(
-        verbose_name="Время окончания занятия", null=True
+        verbose_name="Время окончания занятия",
+        null=True, blank=True
     )
     group = models.ForeignKey(
         Group, on_delete=models.CASCADE, related_name="lessons",
