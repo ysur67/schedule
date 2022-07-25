@@ -1,7 +1,7 @@
 from typing import Iterable, Union
 
-from apps.feedback.bots.utils.const import MAIN_MENU_KEYBOARD_LAYOUT
-from apps.feedback.bots.utils.keyboard.main_menu import MainMenuKeyboard
+from apps.feedback.bots.commands.get_main_menu import get_main_menu_layout
+from apps.feedback.bots.utils.keyboard.base import SimpleKeyboard
 from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.const import MAX_DAYS_OFFSET
 from asgiref.sync import sync_to_async
@@ -16,7 +16,7 @@ class SetDaysOffsetCommand(CommandWithProfile):
         return self._require_field("days_offset")
 
     async def _execute(self) -> Iterable[SingleMessage]:
-        keyboard = MainMenuKeyboard(MAIN_MENU_KEYBOARD_LAYOUT)
+        keyboard = SimpleKeyboard(data=get_main_menu_layout())
         try:
             offset = int(self.new_days_offset)
         except ValueError:

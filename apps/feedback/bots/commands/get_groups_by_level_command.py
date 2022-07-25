@@ -25,11 +25,19 @@ class GetGroupsByLevelCommand(BaseCommand):
     async def _execute(self) -> Iterable[SingleMessage]:
         level = await sync_to_async(get_educational_level_by_title)(self.message)
         groups = get_groups_by_educational_level(level)
-        count = groups.count()
+        count = await sync_to_async(groups.count)()
         rows = count / self.BUTTONS_ON_SINGLE_KEYBOARD
         if (count > VK_MAX_BUTTONS_IN_KEYBOARD) or (rows >= VK_MAX_ROWS_IN_KEYBOARD):
-            return self._build_multiple_keyboards(groups)
-        keyboard = SimpleKeyboard(data=groups_to_buttons(groups))
+            response: 'list[SingleMessage]' = []
+            response.append(SingleMessage('Выберите одну из групп'))
+            keyboards = await sync_to_async(self._build_multiple_keyboards)(groups)
+            for index, elem in enumerate(keyboards):
+                response.append(SingleMessage(
+                    message=str(index), keyboard=elem
+                ))
+            return response
+        buttons = await sync_to_async(groups_to_buttons)(groups)
+        keyboard = SimpleKeyboard(data=buttons)
         return [SingleMessage(
             message="Выберите одну из групп",
             keyboard=keyboard
@@ -48,7 +56,6 @@ class GetGroupsByLevelCommand(BaseCommand):
                     data=groups_to_buttons(page),
                     has_cancel_button=index == paginator.num_pages - 1,
                     is_inline=True,
-                    items_per_row=self.BUTTONS_ON_SINGLE_KEYBOARD
                 )
             )
         return result

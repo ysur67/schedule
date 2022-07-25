@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from collections.abc import Iterable
-from dataclasses import dataclass
-from typing import Any, List, Optional, Union
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
 
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            KeyboardButton, ReplyKeyboardMarkup)
@@ -17,7 +17,9 @@ class Button:
 # Чтобы имя класса не конфликтовало с Keybord'ами из пакетов
 @dataclass
 class SimpleKeyboard(ABC):
-    data: Iterable[Button] = []
+    data: Iterable[Button] = field(
+        default_factory=list,
+    )
     is_inline: bool = False
     has_cancel_button: bool = True
     items_per_row: int = 2
