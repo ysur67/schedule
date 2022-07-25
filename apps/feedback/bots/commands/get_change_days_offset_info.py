@@ -1,7 +1,6 @@
 from typing import Iterable
 
 from apps.feedback.bots.utils.keyboard.base import Button, SimpleKeyboard
-from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
 from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile

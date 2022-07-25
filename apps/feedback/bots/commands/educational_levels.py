@@ -1,7 +1,6 @@
 from typing import Iterable
 
 from apps.feedback.bots.utils.keyboard.base import Button, SimpleKeyboard
-from apps.feedback.bots.utils.keyboard.levels import EducationalLevelsKeyboard
 from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.timetables.models.group import EducationalLevel
 from apps.timetables.usecases.educational_level import \
