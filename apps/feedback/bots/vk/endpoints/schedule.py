@@ -35,7 +35,7 @@ def init_endpoints(app: VkBotMixin):
     @app.bot.on.message(text="Показать расписание")
     async def show_schedule(message: Message):
         result = await GetScheduleCommand(
-            date_start=datetime.strptime('01.01.2022', '%d.%m.%Y'),
+            date_start=datetime.now(),
             account_id=message.peer_id
         ).execute()
         await app.send_response(await ToVkApiMapper.convert(result), message)

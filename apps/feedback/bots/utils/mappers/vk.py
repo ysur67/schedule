@@ -1,6 +1,5 @@
-from typing import Dict, Iterable, List, Union
+from typing import Dict, Iterable, List
 
-from apps.feedback.bots.utils import keyboard
 from apps.feedback.bots.utils.mappers.base import BaseMessengerMapper
 from apps.feedback.bots.utils.response.message import SingleMessage
 from asgiref.sync import sync_to_async
@@ -15,22 +14,8 @@ class ToVkApiMapper(BaseMessengerMapper):
             keyboard_data = None
             if item.keyboard:
                 keyboard_data = await sync_to_async(item.keyboard.to_vk_api)()
-            if keyboard_data is None:
-                result.append({
-                    'message': item.message
-                })
-            if isinstance(keyboard_data, str):
-                result.append({
-                    'message': item.message,
-                    'keyboard': keyboard_data
-                })
-            if isinstance(keyboard_data, list):
-                result.append({
-                    'message': item.message,
-                })
-                for index, elem in enumerate(keyboard_data):
-                    result.append({
-                        'message': f'{index + 1}.',
-                        'keyboard': elem
-                    })
+            result.append({
+                'message': item.message,
+                'keyboard': keyboard_data
+            })
         return result
