@@ -16,7 +16,7 @@ class Button:
 
 # Чтобы имя класса не конфликтовало с Keybord'ами из пакетов
 @dataclass
-class SimpleKeyboard(ABC):
+class SimpleKeyboard():
     data: Iterable[Button] = field(
         default_factory=list,
     )
