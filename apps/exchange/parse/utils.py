@@ -24,8 +24,14 @@ def get_time_range_from_string(string: str) -> Tuple[time, time]:
     initial = string.split("-")
     if not initial:
         raise TypeError("time range is invalid")
-    start_hour, start_minute = get_hours_and_minutes(initial[0])
-    end_hour, end_minute = get_hours_and_minutes(initial[1])
+    try:
+        start_hour, start_minute = get_hours_and_minutes(initial[0])
+    except ValueError:
+        return None, None
+    try:
+        end_hour, end_minute = get_hours_and_minutes(initial[1])
+    except ValueError:
+        return None, None
     start = time(hour=start_hour, minute=start_minute)
     end = time(hour=end_hour, minute=end_minute)
     return start, end

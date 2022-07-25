@@ -8,7 +8,7 @@ from apps.timetables.models.group import Group
 
 
 def build_status_message(profile: Profile) -> str:
-    group = profile.get_group()
+    group = profile.current_group
     result = ""
     if group:
         result += f"Группа: {group.title}\n"
@@ -55,7 +55,8 @@ def build_lessons_message_by_date(date_: date, lessons: Iterable[Lesson]) -> str
             result += f"\t🏛 {lesson.classroom.title}\n"
         if lesson.href:
             result += f"\tСсылка: {lesson.href}\n"
-        result += f"\tПримечание: {lesson.note}\n"
+        if lesson.note:
+            result += f"\tПримечание: {lesson.note}\n"
     return result
 
 

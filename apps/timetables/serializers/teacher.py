@@ -1,10 +1,9 @@
-from rest_framework import serializers
-
 from apps.timetables.models.teacher import Teacher
+from rest_framework import serializers
 
 
 class TeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = "__all__"
+        exclude = ('is_active', )

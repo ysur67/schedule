@@ -8,7 +8,7 @@ from apps.feedback.usecases.account_messenger import \
 def get_profile_by_messenger_account(account: MessengerAccount) -> Optional[Profile]:
     return Profile.objects.filter(
         messenger_accounts__account_id=account.account_id
-    ).first()
+    ).select_related("current_group", "user").first()
 
 
 def get_profile_by_account_id(id: str) -> Optional[Profile]:

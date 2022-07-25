@@ -2,12 +2,13 @@ from datetime import date, timedelta
 from typing import Iterable
 
 from apps.feedback.bots.commands.utils import build_lessons_message
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.main.utils.date import to_message_format
 from apps.timetables.usecases.lesson import \
     get_lessons_dict_by_group_and_date_range
 from asgiref.sync import sync_to_async
 
-from .base import CommandWithProfile, SingleMessage
+from .base import CommandWithProfile
 
 
 class GetScheduleCommand(CommandWithProfile):
@@ -21,7 +22,7 @@ class GetScheduleCommand(CommandWithProfile):
         return self._require_field("date_end", raise_exception=False)
 
     async def _execute(self) -> Iterable[SingleMessage]:
-        group = await sync_to_async(self.profile.get_group)()
+        group = self.profile.current_group
         if not group:
             result = "У тебя не выбрана группа.\n"
             result += "Я не могу показать тебе расписание, если я не знаю твоей группы"

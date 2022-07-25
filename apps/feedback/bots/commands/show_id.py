@@ -1,6 +1,8 @@
-from typing import Iterable, Union
+from typing import Iterable
 
-from .base import BaseCommand, SingleMessage
+from apps.feedback.bots.utils.response.message import SingleMessage
+
+from .base import BaseCommand
 
 
 class ShowIDCommand(BaseCommand):

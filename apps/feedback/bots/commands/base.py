@@ -1,26 +1,13 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Iterable
 
 from apps.feedback.bots.utils.const import Messengers
-from apps.feedback.bots.utils.keyboard.base import BaseKeyboard
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.models import MessengerModel, Profile
 from apps.feedback.usecases.messenger import get_messenger_by_code
 from apps.feedback.usecases.profile import \
     get_profile_by_messenger_and_account_id
 from asgiref.sync import sync_to_async
-
-
-@dataclass
-class SingleMessage:
-    message: str
-    keyboard: Optional[BaseKeyboard] = None
-
-    def to_dict(self) -> Dict:
-        return {
-            "message": self.message,
-            "keyboard": self.keyboard
-        }
 
 
 class BaseCommand(ABC):

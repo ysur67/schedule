@@ -4,7 +4,7 @@ from functools import singledispatchmethod
 from typing import Dict, Iterable, List, Union
 
 from apps.feedback.bots import BaseBot
-from apps.feedback.bots.commands.base import SingleMessage
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.bots.vk.app import init_endpoints
 from apps.feedback.bots.vk.base import VkBotMixin
 from apps.feedback.bots.vk.middlewares.create_account import \

@@ -1,11 +1,11 @@
 from typing import Iterable
 
-from apps.feedback.bots.utils.keyboard.base import Button
-from apps.feedback.bots.utils.keyboard.settings import SettingsKeyboard
+from apps.feedback.bots.utils.keyboard.base import Button, SimpleKeyboard
+from apps.feedback.bots.utils.response.message import SingleMessage
 from apps.feedback.const import DEFAULT_DAYS_OFFSET
 from apps.feedback.models import Profile
 
-from .base import CommandWithProfile, SingleMessage
+from .base import CommandWithProfile
 
 
 class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
@@ -19,7 +19,7 @@ class GetChangeDaysOffsetInfoCommand(CommandWithProfile):
         msg += "Писать <> не нужно\n\n"
         msg += f"Сейчас ты получаешь расписание на {self.profile.days_offset} дней"
         layout: Iterable[Button] = await self.build_settings_keyboard_layout(self.profile)
-        keyboard = SettingsKeyboard(layout)
+        keyboard = SimpleKeyboard(layout)
         return [SingleMessage(
             message=msg,
             keyboard=keyboard
