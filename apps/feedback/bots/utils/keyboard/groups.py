@@ -11,10 +11,8 @@ from django.db.models.query import QuerySet
 from vkbottle import Keyboard, Text
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
 
-from .base import BaseKeyboard
 
-
-class GroupsKeyboard(BaseKeyboard):
+class GroupsKeyboard:
     OFFSET = 2
     ITEMS_PER_PAGE = 8
 

@@ -3,10 +3,8 @@ from typing import Any, List, Union
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 from vkbottle import Keyboard, Text
 
-from .base import BaseKeyboard
 
-
-class MainMenuKeyboard(BaseKeyboard):
+class MainMenuKeyboard:
     data: List[str]
 
     def to_vk_api(self) -> Union[str, List[str]]:

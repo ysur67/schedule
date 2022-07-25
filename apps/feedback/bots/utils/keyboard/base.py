@@ -8,35 +8,15 @@ from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
 from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 
-class BaseKeyboard(ABC):
-
-    def __init__(self, initial: Any, is_inline: bool = False, has_cancel_button: bool = True) -> None:
-        self.data = initial
-        self.is_inline = is_inline
-        self.has_cancel_button = has_cancel_button
-
-    @abstractmethod
-    def to_vk_api(self) -> Union[str, List[str]]:
-        pass
-
-    @abstractmethod
-    def to_telegram_api(self) -> Union[ReplyKeyboardMarkup, List[InlineKeyboardMarkup]]:
-        pass
-
-    def _is_last(self, index: int, data: Iterable) -> bool:
-        if not isinstance(data, Iterable):
-            return False
-        return index == len(data) - 1
-
-
 @dataclass
 class Button:
     title: str
-    value: Optional[str]
+    value: Optional[str] = None
 
 
+# Чтобы имя класса не конфликтовало с Keybord'ами из пакетов
 @dataclass
-class IKeyboard(ABC):
+class SimpleKeyboard(ABC):
     data: Iterable[Button] = []
     is_inline: bool = False
     has_cancel_button: bool = True

@@ -5,10 +5,10 @@ from aiogram.types import (InlineKeyboardMarkup, KeyboardButton,
 from vkbottle import Keyboard, Text
 from vkbottle.tools.dev.keyboard.color import KeyboardButtonColor
 
-from .base import BaseKeyboard, Button
+from .base import Button
 
 
-class SettingsKeyboard(BaseKeyboard):
+class SettingsKeyboard:
     data: Iterable[Button]
 
     def to_vk_api(self) -> Union[str, List[str]]:

@@ -2,15 +2,12 @@ from typing import List, Union
 
 from aiogram.types import (InlineKeyboardMarkup, KeyboardButton,
                            ReplyKeyboardMarkup)
+from apps.timetables.models import EducationalLevel
 from django.db.models.query import QuerySet
 from vkbottle import Keyboard, KeyboardButtonColor, Text
 
-from apps.timetables.models import EducationalLevel
 
-from .base import BaseKeyboard
-
-
-class EducationalLevelsKeyboard(BaseKeyboard):
+class EducationalLevelsKeyboard:
     data: QuerySet[EducationalLevel]
 
     def to_vk_api(self) -> str:
